@@ -11,7 +11,7 @@ class UserTests(APITestCase):
         data = {"username": "Jose", "password": "password", "author": "True", "bio" : "writer of bug", "story_set":[]}
         response = self.client.post(url, data, format='json')
 
-        self.assertEqual(response.status_csode, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(User.objects.get().username, 'Jose')
 
