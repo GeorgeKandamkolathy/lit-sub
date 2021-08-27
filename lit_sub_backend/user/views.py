@@ -5,15 +5,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-class all_view(APIView):
-    """
-    [get] = full story list
-    [post] = new story
-    [delete] = delete story?
-    
-    Implement different order return???
-    """
+"""
+all_view is the APIView for all users
 
+[get] = full user list
+"""
+
+class all_view(APIView):
     def get(self, request):
         authors = User.objects.all()
         serializer = UserSerializer(authors, many=True)
@@ -25,12 +23,13 @@ class all_view(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
-    
-class author_view(APIView):
-    '''
-    [post] = comments
 
-    '''
+'''
+author_view returns a specific users data
+
+[get] = return one user data
+'''
+class author_view(APIView):
     def get_object(self, author_id):
         try:
             return User.objects.get(id=author_id)
