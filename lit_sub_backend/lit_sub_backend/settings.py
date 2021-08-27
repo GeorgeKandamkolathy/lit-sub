@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'dj_rest_auth.registration',
     'user.apps.UserConfig',
+    'story.apps.StoryConfig',
 ]
 
 SITE_ID = 1
