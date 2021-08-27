@@ -4,11 +4,11 @@ from .models import User
 
 """
 UserSerializer extending ModelSerialzer
-Serializes id, username, author, bio
+Serializes id, username, author, bio, story_set
 """
 
 class UserSerializer(serializers.ModelSerializer):
         
     class Meta:
         model = User
-        fields = ['id', 'username', 'author', 'bio']
+        fields = ['id', 'username', 'author', 'bio', 'story_set']

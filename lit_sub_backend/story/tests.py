@@ -1,6 +1,6 @@
 from story.serializers import StorySerializer
 from django.test import TestCase
-from rest_framework.test import APIRequestFactory, APITestCase
+from rest_framework.test import APITestCase
 from django.urls import reverse
 from rest_framework import serializers, status
 from .models import Story
