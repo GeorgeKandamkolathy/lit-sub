@@ -3,7 +3,7 @@ from .serializers import UserSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import serializers, status
 
 """
 all_view is the APIView for all users
@@ -40,3 +40,17 @@ class author_view(APIView):
         user = self.get_object(author_id)
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
+class my_account_view(APIView):
+    def get(self, request):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = UserSerializer(request.user, data={'bio':request.data['bio']}, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
