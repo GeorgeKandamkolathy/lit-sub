@@ -10,21 +10,24 @@ from rest_framework.parsers import JSONParser
 
 @pytest.mark.django_db
 class StoryTests(APITestCase): 
+    USER = "Jose"
+    PASS = "password"
 
     def create_user(self):
         url = reverse('user:authors')
-        data = {"username": "jose", "password": "password", "author": "True", "bio" : "writer of bug", "story_set":[]}
+        data = {"username": self.USER, "password": self.PASS, "author": "True", "bio" : "writer of bug", "story_set":[]}
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_story(self):
-        self.client.login(username="jose", password="password")
+        self.client.login(username=self.USER, password=self.PASS)
         url = reverse('story:story')
         data = {"story_text": "bug the end", "story_title": "bug"}
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['story_text'], "bug the end")
 
     def test_get_all_story(self):
         self.test_create_story()
@@ -33,6 +36,7 @@ class StoryTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Story.objects.all().count(), 1)
+        self.assertEqual(response.data[0]['story_title'], "bug")
 
     def test_get_specific_story(self):
         self.test_create_story()
@@ -40,11 +44,10 @@ class StoryTests(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
         self.assertEqual(response.data["story_title"], "bug")
 
     def test_create_empty_story(self):
-        self.client.login(username='jose', password='password')
+        self.client.login(username=self.USER, password=self.PASS)
         url = reverse('story:story')
         data = {'story_text': '', 'story_title': 'bug'}
         response = self.client.post(url, data, format='json')
