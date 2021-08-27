@@ -1,0 +1,5 @@
+#ignore env
+/lit_sub_backend/env
+
+#ignore swp files
+*.swp
