@@ -8,10 +8,12 @@ class Story(models.Model):
     story_title = CharField(max_length=100)
     synopsis = CharField(max_length=500, default="")
     author = models.ManyToManyField(User, default=None)
-    likes = IntegerField(default=0)
+    author_name = CharField(max_length=100, default="Anonymous")
+    likes = IntegerField(blank=True, default=1)
 
 class Comment(models.Model):
     story = models.ForeignKey(Story, on_delete=CASCADE, default=0)
     author = models.ForeignKey(User, on_delete=CASCADE, default=0)
+    author_name = models.CharField(max_length=100, default="Anonymous")
     comment_text = CharField(max_length=400)
-    likes = IntegerField(blank=True, default=0)
+    likes = IntegerField(blank=True, default=1)

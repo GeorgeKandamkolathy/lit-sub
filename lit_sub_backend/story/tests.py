@@ -15,25 +15,31 @@ class StoryTests(APITestCase):
     PASS = "password"
 
     def create_user(self):
-        url = reverse('user:authors')
-        data = {"username": self.USER, "password": self.PASS, "author": "True", "bio" : "writer of bug", "story_set":[]}
-        response = self.client.post(url, data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-    def test_create_story(self):
         get_user_model().objects.create_user(self.USER, '', self.PASS)
         response = self.client.login(username=self.USER, password=self.PASS)
+
         self.assertEqual(response, True)
+
+    def test_create_story(self):
+        self.create_user()
 
         url = reverse('story:story')
         data = {"story_text": "bug the end", "story_title": "bug"}
         response = self.client.post(url, data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['story_text'], "bug the end")
+    
+    def test_create_story_no_login(self):
+        url = reverse('story:story')
+        data = {"story_text": "bug the end", "story_title": "bug"}
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_all_story(self):
         self.test_create_story()
+
         url = reverse('story:story')
         response = self.client.get(url)
 
@@ -50,7 +56,8 @@ class StoryTests(APITestCase):
         self.assertEqual(response.data["story_title"], "bug")
 
     def test_create_empty_story(self):
-        self.client.login(username=self.USER, password=self.PASS)
+        self.create_user()
+
         url = reverse('story:story')
         data = {'story_text': '', 'story_title': 'bug'}
         response = self.client.post(url, data, format='json')
@@ -65,18 +72,38 @@ class StoryTests(APITestCase):
     
     def test_post_comment(self):
         self.test_create_story()
+
         url = reverse('story:detail', args=[1])
         response = self.client.post(url, data={"comment_text": "i like bug"}, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['comment_text'], "i like bug")
     
+    def test_post_comment_no_login(self):
+        self.test_create_story()
+        self.client.logout()
+
+        url = reverse('story:detail', args=[1])
+        response = self.client.post(url, data={"comment_text": "i like bug"}, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    
     def test_get_comment(self):
         self.test_post_comment()
+
         url = reverse('story:comment', args=[1])
         response = self.client.get(url)
-        
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]['comment_text'], "i like bug")
 
-        
+    def test_get_comment_no_login(self):
+        self.test_post_comment()
+        self.client.logout()
+
+        url = reverse('story:comment', args=[1])
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['comment_text'], "i like bug")
+
