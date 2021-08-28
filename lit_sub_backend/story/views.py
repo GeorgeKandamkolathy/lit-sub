@@ -14,6 +14,8 @@ class TokenAuthentication(BasePermission):
             return request.user.is_authenticated
         if request.method == "PUT":
             return request.user.is_authenticated
+        if request.method == "DELETE":
+            return request.user.is_authenticated
         if request.method == "GET":
             return True
 
@@ -34,19 +36,19 @@ class all_view(APIView):
 
     def post(self, request):
         data = request.data
-        data['author'] = [request.user.id]
-        data['author_name'] = request.user.username
         serializer = StorySerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(author=request.user, author_name=request.user.username)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
-
+    
 class story_view(APIView):
-    '''
-    [post] = comments
+    """
+    my_account_view returns the data of the currently authenticated user and allows changes to bio
 
-    '''
+    [get] = return current authenticated user's data
+    [post] = changes the existing bio to submited bio
+    """
 
     permission_classes=[TokenAuthentication]
 
@@ -69,7 +71,21 @@ class story_view(APIView):
         if serializer.is_valid():
             serializer.save(author=request.user, author_name=request.user.username)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)         
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)      
+        
+    def delete(self, request, story_id):
+        story = self.get_object(story_id)
+        if request.user == story.author:
+            #delete comments
+            for comment in story.comment_set.all():
+                comment.like_set.all().delete()
+            story.comment_set.all().delete()
+            #delete likes
+            story.like_set.all().delete()
+            #delete story
+            story.delete()
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_403_FORBIDDEN)
     
 class comment_view(APIView):
     

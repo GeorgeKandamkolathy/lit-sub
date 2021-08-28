@@ -7,7 +7,7 @@ class Story(models.Model):
     story_text = TextField()
     story_title = CharField(max_length=100)
     synopsis = CharField(max_length=500, default="")
-    author = models.ManyToManyField(User, default=None)
+    author = models.ForeignKey(User, on_delete=CASCADE, default=None)
     author_name = CharField(max_length=100, default="Anonymous")
     likes = IntegerField(blank=True, default=0)
 

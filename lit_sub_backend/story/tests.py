@@ -71,6 +71,33 @@ class StoryTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
     
+    def test_delete_story(self):
+        self.test_create_story()
+        story = Story.objects.get(id=1)
+        print(story.author.id)
+        url = reverse('story:detail', args=[1])
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(Story.objects.all().exists())
+        
+    def test_delete_story_unauthorised(self):
+        self.test_create_story()
+        self.client.logout()
+
+        url = reverse('story:detail', args=[1])
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertTrue(Story.objects.all().exists())        
+    
+    def test_delete_story_not_exist(self):
+        self.create_user()
+        url = reverse('story:detail', args=[1])
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
     def test_post_comment(self):
         self.test_create_story()
 

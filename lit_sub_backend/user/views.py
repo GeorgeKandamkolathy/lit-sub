@@ -8,24 +8,28 @@ from rest_framework.permissions import BasePermission
 
 
 class MyAccountAuthentication(BasePermission):
-
+    """
+    Extends BasePermission to authorise POST or GET methods for authenticated
+    users in my_account_view
+    """
     def has_permission(self, request, view):
         if request.method == "POST" or request.method == "GET":
             return request.user.is_authenticated
 
-"""
-all_view is the APIView for all users
-
-[get] = full user list
-"""
-
 class all_view(APIView):
+    """
+    all_view is the APIView for all users
+
+    [get] = full user list
+    [post] = add new user 
+    """
 
     def get(self, request):
         authors = User.objects.all()
         serializer = UserSerializer(authors, many=True)
         return Response(serializer.data)    
 
+    # Replace with dj_rest_auth
     def post(self,request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
@@ -33,12 +37,13 @@ class all_view(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 
-'''
-author_view returns a specific users data
 
-[get] = return one user data
-'''
 class author_view(APIView):
+    """
+    author_view returns a specific users data
+
+    [get] = return one user's data
+    """
 
     def get_object(self, author_id):
         try:
@@ -52,6 +57,12 @@ class author_view(APIView):
         return Response(serializer.data)
 
 class my_account_view(APIView):
+    """
+    my_account_view returns the data of the currently authenticated user and allows changes to bio
+
+    [get] = return current authenticated user's data
+    [post] = changes the existing bio to submited bio
+    """
 
     permission_classes = [MyAccountAuthentication]
 
@@ -60,6 +71,7 @@ class my_account_view(APIView):
         serializer = UserSerializer(user)
         return Response(serializer.data)
     
+    #Change to different method?
     def post(self, request):
         serializer = UserSerializer(request.user, data={'bio':request.data['bio']}, partial=True)
         if serializer.is_valid():

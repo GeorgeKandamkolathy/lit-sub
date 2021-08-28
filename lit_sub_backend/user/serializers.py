@@ -4,7 +4,7 @@ from .models import User
 
 """
 UserSerializer extending ModelSerialzer
-Serializes id, username, author, bio, story_set
+    Serializes id, username, author, bio, story_set
 """
 
 class UserSerializer(serializers.ModelSerializer):
