@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import BasePermission
 
-
 class TokenAuthentication(BasePermission):
 
     def has_permission(self, request, view):
@@ -14,8 +13,6 @@ class TokenAuthentication(BasePermission):
             return request.user.is_authenticated
         if request.method == "GET":
             return True
-
-
 
 class all_view(APIView):
     """

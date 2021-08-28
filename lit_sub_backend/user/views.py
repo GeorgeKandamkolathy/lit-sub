@@ -4,6 +4,14 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import serializers, status
+from rest_framework.permissions import BasePermission
+
+
+class MyAccountAuthentication(BasePermission):
+
+    def has_permission(self, request, view):
+        if request.method == "POST" or request.method == "GET":
+            return request.user.is_authenticated
 
 """
 all_view is the APIView for all users
@@ -12,6 +20,7 @@ all_view is the APIView for all users
 """
 
 class all_view(APIView):
+
     def get(self, request):
         authors = User.objects.all()
         serializer = UserSerializer(authors, many=True)
@@ -30,6 +39,7 @@ author_view returns a specific users data
 [get] = return one user data
 '''
 class author_view(APIView):
+
     def get_object(self, author_id):
         try:
             return User.objects.get(id=author_id)
@@ -42,6 +52,9 @@ class author_view(APIView):
         return Response(serializer.data)
 
 class my_account_view(APIView):
+
+    permission_classes = [MyAccountAuthentication]
+
     def get(self, request):
         user = request.user
         serializer = UserSerializer(user)
