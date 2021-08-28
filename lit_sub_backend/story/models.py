@@ -17,3 +17,13 @@ class Comment(models.Model):
     author_name = models.CharField(max_length=100, default="Anonymous")
     comment_text = CharField(max_length=400)
     likes = IntegerField(blank=True, default=1)
+
+class Like(models.Model):
+    author = models.ForeignKey(User, on_delete=CASCADE, blank=True, null=True)
+    story = models.ForeignKey(Story, on_delete=CASCADE, blank=True, null=True)
+    comment = models.ForeignKey(Comment, on_delete=CASCADE, blank=True, null=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['author', 'story', 'comment'], name="unique_like"),
+        ]

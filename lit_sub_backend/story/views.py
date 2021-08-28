@@ -1,15 +1,18 @@
-from .models import Comment, Story
+from .models import Comment, Story, Like
 from .serializers import StorySerializer, CommentSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import BasePermission
+from django.shortcuts import get_object_or_404
 
 class TokenAuthentication(BasePermission):
 
     def has_permission(self, request, view):
         if request.method == "POST":
+            return request.user.is_authenticated
+        if request.method == "PUT":
             return request.user.is_authenticated
         if request.method == "GET":
             return True
@@ -78,3 +81,36 @@ class comment_view(APIView):
         comments = story.comment_set.all()       
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class like_view(APIView):
+
+    permission_classes=[TokenAuthentication]
+
+    def put(self, request, obj, obj_id):
+        if obj == "story":
+            story = get_object_or_404(Story, id=obj_id)
+            if Like.objects.filter(story=story).exists():
+                Like.objects.filter(story=story).delete()
+                story.likes = story.likes - 1
+            else:
+                like = Like(author=request.user, story=story)
+                like.save()
+                story.likes = story.likes + 1 
+            
+            story.save()
+            serializer = StorySerializer(story)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        elif obj == "comment":
+            comment = get_object_or_404(Comment, id=obj_id)
+            if Like.objects.filter(comment=comment).exists():
+                Like.objects.filter(comment=comment).delete()
+                comment.likes = comment.likes - 1
+            else:
+                like = Like(author=request.user, comment=comment)
+                like.save()
+                comment.likes = comment.likes + 1
+            
+            comment.save() 
+            serializer = CommentSerializer(comment)
+            return Response(serializer.data, status=status.HTTP_200_OK)

@@ -108,7 +108,6 @@ class StoryTests(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['comment_text'], "i like bug")
     
     def test_like_post(self):
         self.test_create_story()
@@ -125,7 +124,7 @@ class StoryTests(APITestCase):
         url = reverse('story:like', args=["story",1])
         response = self.client.put(url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)        
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)        
 
     def test_unlike_post(self):
         self.test_like_post()
@@ -142,41 +141,7 @@ class StoryTests(APITestCase):
         url = reverse('story:like', args=["story",1])
         response = self.client.put(url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_dislike_post(self):
-        self.test_create_story()
-
-        url = reverse('story:dislike', args=["story",1])
-        response = self.client.put(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_dislike_post_no_login(self):
-        self.test_create_story()
-        self.client.logout()
-
-        url = reverse('story:dislike', args=["story",1])
-        response = self.client.put(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_undislike_post(self):
-        self.test_dislike_post()
-
-        url = reverse('story:dislike', args=["story",1])
-        response = self.client.put(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_undislike_post_no_login(self):
-        self.test_dislike_post()
-        self.client.logout()
-
-        url = reverse('story:dislike', args=["story",1])
-        response = self.client.put(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_like_comment(self):
         self.test_post_comment()
@@ -193,7 +158,7 @@ class StoryTests(APITestCase):
         url = reverse('story:like', args=["comment",1])
         response = self.client.put(url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)        
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)        
 
     def test_unlike_comment(self):
         self.test_like_comment()
@@ -210,38 +175,4 @@ class StoryTests(APITestCase):
         url = reverse('story:like', args=["comment",1])
         response = self.client.put(url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_dislike_comment(self):
-        self.test_post_comment()
-
-        url = reverse('story:dislike', args=["comment",1])
-        response = self.client.put(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_dislike_comment_no_login(self):
-        self.test_post_comment()
-        self.client.logout()
-
-        url = reverse('story:dislike', args=["comment",1])
-        response = self.client.put(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_undislike_comment(self):
-        self.test_dislike_comment()
-
-        url = reverse('story:dislike', args=["comment",1])
-        response = self.client.put(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_undislike_comment_no_login(self):
-        self.test_dislike_comment()
-        self.client.logout()
-
-        url = reverse('story:dislike', args=["comment",1])
-        response = self.client.put(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
