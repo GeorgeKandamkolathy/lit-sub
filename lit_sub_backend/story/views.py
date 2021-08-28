@@ -89,14 +89,21 @@ class story_view(APIView):
     
 class comment_view(APIView):
     
-    def get(self, request, story_id):
-        try:
-            story = Story.objects.get(id=story_id)
-        except Story.DoesNotExist:
-            raise Http404
+    def get(self, request, story_id, comment_id):
+        story = get_object_or_404(Story, id=story_id)
+
         comments = story.comment_set.all()       
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def delete(self, request, story_id, comment_id):
+        comment = get_object_or_404(Comment, id=comment_id)
+        if comment.author == request.user:
+            comment.like_set.all().delete()
+            comment.delete()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
 class like_view(APIView):
 

@@ -3,7 +3,7 @@ from django.test import TestCase
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from rest_framework import serializers, status
-from .models import Story
+from .models import Comment, Story
 from user.models import User
 import pytest
 from django.contrib.auth import get_user_model
@@ -93,6 +93,7 @@ class StoryTests(APITestCase):
     
     def test_delete_story_not_exist(self):
         self.create_user()
+
         url = reverse('story:detail', args=[1])
         response = self.client.delete(url)
 
@@ -121,7 +122,7 @@ class StoryTests(APITestCase):
     def test_get_comment(self):
         self.test_post_comment()
 
-        url = reverse('story:comment', args=[1])
+        url = reverse('story:comment', args=[1, 0])
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -131,11 +132,39 @@ class StoryTests(APITestCase):
         self.test_post_comment()
         self.client.logout()
 
-        url = reverse('story:comment', args=[1])
+        url = reverse('story:comment', args=[1, 1])
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
+    def test_delete_comment(self):
+        self.test_post_comment()
+
+        url = reverse('story:comment', args=[1, 1])
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(Comment.objects.all().exists())
+
+    def test_delete_comment_not_authorised(self):
+        self.test_post_comment()
+        self.client.logout()
+
+        url = reverse('story:comment', args=[1, 1])
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertTrue(Comment.objects.all().exists())
+    
+    def test_delete_comment_not_exist(self):
+        self.create_user()
+
+        url = reverse('story:comment', args=[1, 1])
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertFalse(Comment.objects.all().exists())
+
     def test_like_post(self):
         self.test_create_story()
 
