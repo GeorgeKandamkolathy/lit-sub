@@ -29,6 +29,7 @@ class StoryTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['story_text'], "bug the end")
+        self.assertEqual(response.data['author_name'], self.USER)
     
     def test_create_story_no_login(self):
         url = reverse('story:story')
@@ -78,6 +79,8 @@ class StoryTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['comment_text'], "i like bug")
+        self.assertEqual(response.data['author_name'], self.USER)
+
     
     def test_post_comment_no_login(self):
         self.test_create_story()

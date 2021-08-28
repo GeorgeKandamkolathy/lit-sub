@@ -35,8 +35,8 @@ class all_view(APIView):
     def post(self, request):
         data = request.data
         data['author'] = [request.user.id]
-        data['author_name'] = [request.user.username]
-        serializer = StorySerializer(data=request.data)
+        data['author_name'] = request.user.username
+        serializer = StorySerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
