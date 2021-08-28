@@ -61,6 +61,7 @@ class UserTests(APITestCase):
         url = reverse('user:current')
         response = self.client.post(url, data={"bio":"i write bug"}, format="json")      
 
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['username'], self.USER)
         self.assertEqual(response.data['bio'], "i write bug")
 
