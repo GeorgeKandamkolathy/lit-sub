@@ -116,6 +116,7 @@ class StoryTests(APITestCase):
         response = self.client.put(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['likes'], 1)
 
     def test_like_post_no_login(self):
         self.test_create_story()
@@ -133,6 +134,7 @@ class StoryTests(APITestCase):
         response = self.client.put(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['likes'], 0)
 
     def test_unlike_post_no_login(self):
         self.test_like_post()
@@ -150,6 +152,7 @@ class StoryTests(APITestCase):
         response = self.client.put(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['likes'], 1)
 
     def test_like_comment_no_login(self):
         self.test_post_comment()
@@ -167,6 +170,7 @@ class StoryTests(APITestCase):
         response = self.client.put(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['likes'], 0)
 
     def test_unlike_comment_no_login(self):
         self.test_like_comment()
