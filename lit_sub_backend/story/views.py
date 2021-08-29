@@ -44,7 +44,8 @@ class all_view(APIView):
     
 class story_view(APIView):
     """
-    my_account_view returns the data of the currently authenticated user and allows changes to bio
+    my_account_view returns the data of the currently authenticated user
+    and allows changes to bio
 
     [get] = return current authenticated user's data
     [post] = changes the existing bio to submited bio
@@ -88,6 +89,12 @@ class story_view(APIView):
         return Response(status=status.HTTP_403_FORBIDDEN)
     
 class comment_view(APIView):
+    """
+    comment_view returns all comments of a story and has the delete method
+
+    [get] = return the comments of a given story
+    [delete] = deletes a comment from a story
+    """
     
     def get(self, request, story_id, comment_id):
         story = get_object_or_404(Story, id=story_id)
@@ -106,6 +113,12 @@ class comment_view(APIView):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
 class like_view(APIView):
+    """
+    like_view either creates a like object for a comment or post
+    otherwise deletes the object
+
+    [put] = create or destroy like object for story or comment
+    """
 
     permission_classes=[TokenAuthentication]
 
