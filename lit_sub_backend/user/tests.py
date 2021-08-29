@@ -33,7 +33,6 @@ class UserTests(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
         self.assertEqual(response.data['username'], self.USER)
 
     def test_get_specific_no_author(self):
@@ -47,6 +46,7 @@ class UserTests(APITestCase):
         url = reverse('rest_login')
         response = self.client.post(url, {"username":self.USER, "password":self.PASS}, format="json")
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['key'])
+
         url = reverse('user:current')
         response = self.client.get(url)
         
@@ -58,9 +58,11 @@ class UserTests(APITestCase):
         url = reverse('rest_login')
         response = self.client.post(url, {"username":self.USER, "password":self.PASS}, format="json")
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['key'])
+        
         url = reverse('user:current')
         response = self.client.post(url, data={"bio":"i write bug"}, format="json")      
 
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['username'], self.USER)
         self.assertEqual(response.data['bio'], "i write bug")
 
