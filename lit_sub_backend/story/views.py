@@ -23,7 +23,7 @@ class all_view(APIView):
     """
     [get] = full story list
     [post] = new story
-    [delete] = delete story?
+    [delete] = delete story
     
     Implement different order return???
     """
@@ -48,7 +48,7 @@ class story_view(APIView):
     and allows changes to bio
 
     [get] = return current authenticated user's data
-    [post] = changes the existing bio to submited bio
+    [post] = post comment to current story
     """
 
     permission_classes=[TokenAuthentication]
@@ -65,7 +65,6 @@ class story_view(APIView):
         return Response(serializer.data)
     
     def post(self, request, story_id):
-        story = self.get_object(story_id)
         data = request.data
         data["story"] = story_id
         serializer = CommentSerializer(data=data)

@@ -6,51 +6,34 @@ import {
     Link
   } from "react-router-dom";
 
+
 export default class NavBar extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            user: props.user,
-            token: props.token,
+            user: this.props.user,
+            token: this.props.token,
         }
     }
     
     render() {
-        const isLoggedIn = (props.user != null) ? true : false
+        const isLoggedIn = (this.props.token != null) ? true : false
         return(
-            <Router>
-                <div>
-                    <nav>
-                    <Link to="/">Home</Link>
-                    <Link to="/story">Stories</Link>
-                    <Link to="/authors">Authors</Link>
+                <div class="relative flex justify-center ">
+                    <div class="">
+                    <Link to="/" class="m-8">Home</Link>
+                    <Link to="/story" class="m-16">Stories</Link>
+                    <Link to="/authors" class="m-8">Authors</Link>
+                    </div>
+                    <div class="absolute right-10 h-16 w-16">
                     {isLoggedIn ? (
                         <Link to="/logout">Logout</Link>    
                     ) : (
                         <Link to="/login">Login</Link>
                     )
                     }
-                    </nav>
+                    </div>
                 </div>
-
-                <Switch>
-                    <Route path="/story">
-                        <Story />
-                    </Route>
-                    <Route path="/authors">
-                        <Authors />
-                    </Route>
-                    <Route path="/logout">
-                        <Logout />
-                    </Route>
-                    <Route path="/login">
-                        <Login />
-                    </Route>
-                    <Route path="/">
-                        <Home />
-                    </Route>
-                </Switch>
-            </Router>
         )
     }
 

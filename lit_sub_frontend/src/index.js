@@ -1,13 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Home from './components/home/index'
+import {
+  BrowserRouter,
+  Switch,
+  Route
+} from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
+import Home from './components/home'
+import Login from './components/login'
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Home />
-  </React.StrictMode>,
+  <BrowserRouter>
+        {/* If the current URL is /about, this route is rendered
+            while the rest are ignored */}
+        <Route exact path="/" render={(props) => <Home {...props} />} />
+        {/* If none of the previous routes render anything,
+            this route acts as a fallback.
+
+            Important: A route with path="/" will *always* match
+            the URL because all URLs begin with a /. So that's
+            why we put this one last of all */}
+        <Route exact path="/login" render={(props) => <Login {...props} />}/>
+  </BrowserRouter>,
   document.getElementById('root')
 );
 
