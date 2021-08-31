@@ -9,19 +9,13 @@ import {
 import reportWebVitals from './reportWebVitals';
 import Home from './components/home'
 import Login from './components/login'
+import Story from './components/story';
 
 ReactDOM.render(
   <BrowserRouter>
-        {/* If the current URL is /about, this route is rendered
-            while the rest are ignored */}
         <Route exact path="/" render={(props) => <Home {...props} />} />
-        {/* If none of the previous routes render anything,
-            this route acts as a fallback.
-
-            Important: A route with path="/" will *always* match
-            the URL because all URLs begin with a /. So that's
-            why we put this one last of all */}
         <Route exact path="/login" render={(props) => <Login {...props} />}/>
+        <Route path="/story/:story_id" render={(props) => <Story {...props}/>}/>
   </BrowserRouter>,
   document.getElementById('root')
 );

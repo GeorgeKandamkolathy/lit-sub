@@ -74,11 +74,9 @@ export default class Home extends React.Component {
         else{
             return(
                 <div class= "h-full">
-                    <div class = "mt-4">
-                        <NavBar user={user} token={token}/>
-                    </div>
+                    <NavBar user={user} token={token}/>
                     <h1 class="m-10 text-5xl font-bold">LITSUB</h1>
-                    <div class="bg-purple-600 bg-opacity-25">
+                    <div class="bg-purple-600 bg-opacity-25 shadow-lg">
                         <div class="relative flex flex-row h-72 pl-10 gap-20">
                         <div>
                         <h3 class="text-purple-600 font-bold text-4xl w-12 mt-24 mr-8">Top Stories</h3>
@@ -88,7 +86,7 @@ export default class Home extends React.Component {
                             {stories.map(story => (
                             <li key={story.id}>
                                 <div class="flex flex-col w-96">
-                                    <div class="text-2xl font-bold"><Link to="/story/">{story.story_title}</Link></div>
+                                    <div class="text-2xl font-bold hover:text-gray-600"><Link to={"/story/"+ story.id}>{story.story_title}</Link></div>
                                     <div class="text-base">{story.synopsis}</div>
                                     <div class="text-base italic"><Link to="/author/">{story.author_name}</Link></div>
                                 </div>
@@ -98,18 +96,28 @@ export default class Home extends React.Component {
                             </ul>   
                             </div>
                     </div>
-                    <div class="bg-blue-600 bg-opacity-25 mt-10 py-5">
-                        <h3 class="text-blue-600 font-bold text-4xl py-20 w-10 pl-10">Popular Authors</h3>
-                        <ul>
+                    <div class="bg-blue-600 bg-opacity-25 mt-16 shadow-lg">
+                        <div class="relative flex flex-row h-72 pl-10 gap-20">
+                        <div>
+                        <h3 class="text-blue-600 font-bold text-4xl w-12 mt-24 mr-8">Popular Authors</h3>
+                        </div>
+                            <ul>
+                            <div class="grid grid-cols-3 gap-x-4 gap-y-14 mt-6" >
                             {authors.map(author => (
                             <li key={author.id}>
-                                <div>
-                                {author.author_name}
-                                {author.bio}
+                                <div class="flex flex-col w-96">
+                                    <div class="text-2xl font-bold"><Link to={"/author/"+ author.id}>{author.username}</Link></div>
+                                    <div class="text-base italic">{author.bio}</div>
                                 </div>
                             </li>
                             ))}
-                        </ul>                     
+                            </div>
+                            </ul>   
+                            </div>
+                    </div>    
+
+                    <div>
+
                     </div>
                 </div>
             );
