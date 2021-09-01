@@ -8,7 +8,7 @@ export default class Home extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            user: null,
+            user: (this.props.location.state == undefined ? null : this.props.location.state.user),
             authors: [],
             stories: [],
             token: (this.props.location.state == undefined ? null : this.props.location.state.token),
@@ -16,21 +16,8 @@ export default class Home extends React.Component {
         this.url = "http://127.0.0.1:8000/" 
     }
 
-
     
     componentDidMount() {
-        if (this.state.token != null){
-            fetch(this.url + 'author/me')
-                .then(res => res.json())
-                .then(
-                    (result) => {
-                        this.setState({
-                            isLoaded: true,
-                            user: result.user
-                        });
-                    }
-                )
-        }
         fetch(this.url + "story/")
         .then(res => res.json())
         .then(
@@ -66,16 +53,14 @@ export default class Home extends React.Component {
     }
 
     render() {
-        const {error, isLoaded, user, authors, token, stories} = this.state;
-        console.log(token)
-        if (error) {
-            return <div>Error: {error.message}</div>;
+        if (this.state.error) {
+            return <div>Error: {this.state.error.message}</div>;
         }
         else{
             return(
                 <div class= "h-full">
-                    <NavBar user={user} token={token}/>
-                    <h1 class="m-10 text-5xl font-bold">LITSUB</h1>
+                    <NavBar user={this.state.user} token={this.state.token}/>
+                    <h1 class="mb-20 ml-14 mt-4 text-5xl font-bold">LITSUB</h1>
                     <div class="bg-purple-600 bg-opacity-25 shadow-lg">
                         <div class="relative flex flex-row h-72 pl-10 gap-20">
                         <div>
@@ -83,10 +68,12 @@ export default class Home extends React.Component {
                         </div>
                             <ul>
                             <div class="grid grid-cols-3 gap-x-4 gap-y-14 mt-6" >
-                            {stories.map(story => (
+                            {this.state.stories.map(story => (
                             <li key={story.id}>
                                 <div class="flex flex-col w-96">
-                                    <div class="text-2xl font-bold hover:text-gray-600"><Link to={"/story/"+ story.id}>{story.story_title}</Link></div>
+                                    <div class="text-2xl font-bold hover:text-gray-600"><Link to={{ pathname: "/story/" + story.id,
+                                        state: {token: this.state.token, user: this.state.user}}}>{story.story_title}</Link>
+                                    </div>
                                     <div class="text-base">{story.synopsis}</div>
                                     <div class="text-base italic"><Link to="/author/">{story.author_name}</Link></div>
                                 </div>
@@ -103,7 +90,7 @@ export default class Home extends React.Component {
                         </div>
                             <ul>
                             <div class="grid grid-cols-3 gap-x-4 gap-y-14 mt-6" >
-                            {authors.map(author => (
+                            {this.state.authors.map(author => (
                             <li key={author.id}>
                                 <div class="flex flex-col w-96">
                                     <div class="text-2xl font-bold"><Link to={"/author/"+ author.id}>{author.username}</Link></div>
@@ -116,7 +103,7 @@ export default class Home extends React.Component {
                             </div>
                     </div>    
 
-                    <div>
+                    <div class="bg-gray-100 h-40 mt-20">
 
                     </div>
                 </div>

@@ -10,10 +10,11 @@ import reportWebVitals from './reportWebVitals';
 import Home from './components/home'
 import Login from './components/login'
 import Story from './components/story';
+import {v4 as uuid} from 'uuid';
 
 ReactDOM.render(
   <BrowserRouter>
-        <Route exact path="/" render={(props) => <Home {...props} />} />
+        <Route exact path="/" render={(props) => <Home {...props} key={uuid()}/>} />
         <Route exact path="/login" render={(props) => <Login {...props} />}/>
         <Route path="/story/:story_id" render={(props) => <Story {...props}/>}/>
   </BrowserRouter>,

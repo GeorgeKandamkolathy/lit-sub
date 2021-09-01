@@ -7,6 +7,7 @@ export default class Story extends React.Component {
         super(props);
         this.state = {
             error: null,
+            user: (this.props.location.state == undefined ? null : this.props.location.state.user),
             isLoaded: false,
             story_id: this.props.match.params.story_id,
             story: [],
@@ -39,7 +40,7 @@ export default class Story extends React.Component {
 
 
     render(){
-        const {story, error} = this.state 
+        const {story, error, token, user} = this.state 
         console.log(this.props)
         console.log(story)
         if (error) {
@@ -48,10 +49,10 @@ export default class Story extends React.Component {
         else{
             return(
                 <div>
-                    <NavBar />
+                    <NavBar user={user} token={token}/>
                     <div class="bg-purple-200 h-screen">
-                        <div class="flex justify-center content-center items-center h-screen">
-                        <div class="bg-white w-3/4 h-screen mt-20 rounded-lg ">
+                        <div class="flex justify-center h-screen">
+                        <div class="bg-white w-3/4 h-auto mt-14 rounded-lg ">
                         <h1 class="text-center mt-10 text-5xl font-medium">{story.story_title}</h1>
                         <h3 class="text-center mt-5">{story.author_name}</h3>
                         <p class="px-20 mt-10">{story.story_text}</p>

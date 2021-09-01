@@ -42,6 +42,7 @@ export default class Login extends React.Component {
         .then((result) => {
             this.setState({
                 token: result.key,
+                user: this.state.usernameValue,
                 usernameValue: null,
                 passwordValue: null,
             })},
@@ -62,7 +63,7 @@ export default class Login extends React.Component {
             return(
                 <Redirect to={{
                     pathname: "/",
-                    state: { token: this.state.token }
+                    state: { token: this.state.token, user: this.state.user}
                   }} />
             );
         }
@@ -84,17 +85,17 @@ export default class Login extends React.Component {
                     <div class="flex justify-center items-center h-screen">
                     <form onSubmit={this.handleSubmit} class="drop-shadow">
                         <h2 class="ml-10 mb-7 text-3xl text-purple-600 font-bold">LITSUB</h2>
-                        <div class="inline-flex flex-col shadow-lg px-20 pb-20 pt-10">
+                        <div class="inline-flex flex-col shadow-lg px-20 pb-24 pt-10">
                         <h3 class="text-3xl mb-10 font-bold">Sign in</h3>
                         <label class="">
                         <p>Username:</p>
                         <input class="rounded border-2 border-black-400 focus:outline-none focus:ring-2 focus:border-purple-300 pl-3 w-96 py-2" name="usernameValue" type="text" value={this.state.usernameValue} onChange={this.handleChange} />
                         </label>
-                        <label class="my-10">
+                        <label class="my-14">
                         <p>Password:</p>
                         <input class="rounded border-2 border-black-400 focus:outline-none focus:ring-2 focus:border-purple-300 pl-3 w-96 py-2" name="passwordValue" type="password" value={this.state.passwordValue} onChange={this.handleChange} />
                         </label>
-                        <input type="submit" value="Submit" class="rounded py-1 bg-purple-700 text-white"/>
+                        <input type="submit" value="Submit" class="rounded py-1 bg-purple-700 text-white hover:bg-purple-400 hover:text-black cursor-pointer"/>
                         </div>
                         <p>Don't have an account?</p> <Link to="/register">Register</Link>
                     </form>
