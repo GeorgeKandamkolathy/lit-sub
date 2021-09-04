@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 import NavBar from '../common/nav-bar';
+import { ArrowRightIcon } from '@heroicons/react/solid';
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -63,16 +64,19 @@ export default class Home extends React.Component {
                     <h1 class="mb-20 ml-14 mt-4 text-5xl font-bold">LITSUB</h1>
                     <div class="bg-purple-600 bg-opacity-25 shadow-lg">
                         <div class="relative flex flex-row h-72 pl-10 gap-20">
-                        <div>
-                        <h3 class="text-purple-600 font-bold text-4xl w-12 mt-24 mr-8">Top Stories</h3>
-                        </div>
+                            <div>
+                            <h3 class="text-purple-600 font-bold text-4xl w-12 mt-24 mr-8">Top Stories</h3>
+                            </div>
                             <ul>
                             <div class="grid grid-cols-3 gap-x-4 gap-y-14 mt-6" >
                             {this.state.stories.map(story => (
                             <li key={story.id}>
                                 <div class="flex flex-col w-96">
-                                    <div class="text-2xl font-bold hover:text-gray-600"><Link to={{ pathname: "/story/" + story.id,
-                                        state: {token: this.state.token, user: this.state.user}}}>{story.story_title}</Link>
+                                    <div class="text-2xl font-bold hover:text-gray-600">
+                                        <Link to={{ pathname: "/story/" + story.id,
+                                            state: {token: this.state.token, user: this.state.user}}}>
+                                        {story.story_title}
+                                        </Link>
                                     </div>
                                     <div class="text-base">{story.synopsis}</div>
                                     <div class="text-base italic"><Link to="/author/">{story.author_name}</Link></div>
@@ -81,7 +85,10 @@ export default class Home extends React.Component {
                             ))}
                             </div>
                             </ul>   
-                            </div>
+                            <button>
+                                <ArrowRightIcon class="transform h-5 w-5 hover:scale-150 hover:text-blue-700"/>
+                            </button>
+                        </div>
                     </div>
                     <div class="bg-blue-600 bg-opacity-25 mt-16 shadow-lg">
                         <div class="relative flex flex-row h-72 pl-10 gap-20">

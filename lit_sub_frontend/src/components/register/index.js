@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import {XIcon} from '@heroicons/react/solid'
 
-export default class Login extends React.Component {
+export default class Register extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -12,6 +12,7 @@ export default class Login extends React.Component {
             token: "",
             usernameValue: "",
             passwordValue: "",
+            emailValue: "",
         };
         this.url = "http://127.0.0.1:8000/" 
         this.handleChange = this.handleChange.bind(this)
@@ -30,13 +31,13 @@ export default class Login extends React.Component {
 
     handleSubmit(event){
         event.preventDefault();
-        fetch(this.url + 'auth/login/',{
+        fetch(this.url + 'auth/registration/',{
             method: 'POST',
             mode: 'cors', 
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({username:this.state.usernameValue, password:this.state.passwordValue})
+            body: JSON.stringify({username:this.state.usernameValue, email:this.state.emailValue, password1:this.state.password1Value, password2:this.state.password2Value})
         })
         .then(data => data.json())
         .then((result) => {
@@ -67,35 +68,37 @@ export default class Login extends React.Component {
         }
         else{
             return(
-                <div>
-                    {fail ? (
-                        <div class="bg-purple-700">
-                            <div class="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
-                                <p class="text-white text-base text-center">Unrecognized Login</p>
-                                <XIcon class="absolute top-3 right-5 h-6 w-6 text-white"/>
-                            </div>
-                        </div> 
-                    ) :(
-                        <div></div>
-                    )
-                    }
-
-                    <div class="flex justify-center items-center h-screen">
-                    <form onSubmit={this.handleSubmit} class="drop-shadow">
+                <div class="flex">
+                    <div class="flex flex-col items-center justify-center h-3/4 w-1/2">
                         <h2 class="ml-10 mb-7 text-3xl text-purple-600 font-bold">LITSUB</h2>
+                        <ul>
+                            <li>Get access to Hundreds of authors and Thousands of works</li>
+                            <li>Support your favourite authors</li>
+                        </ul>
+                    </div>
+                    <div class="flex justify-end mr-36 items-center h-screen mt-10">
+                    <form onSubmit={this.handleSubmit} class="drop-shadow">
                         <div class="inline-flex flex-col shadow-lg px-20 pb-24 pt-10">
-                        <h3 class="text-3xl mb-10 font-bold">Sign in</h3>
-                        <label class="">
+                        <h3 class="text-3xl mb-10 font-bold">Create Account</h3>
+                        <label class="my-7">
+                        <p>Email:</p>
+                        <input class="rounded border-2 border-black-400 focus:outline-none focus:ring-2 focus:border-purple-300 pl-3 w-96 py-2" name="emailValue" type="text" value={this.state.emailValue} onChange={this.handleChange} />
+                        </label>
+                        <label class="my-7">
                         <p>Username:</p>
                         <input class="rounded border-2 border-black-400 focus:outline-none focus:ring-2 focus:border-purple-300 pl-3 w-96 py-2" name="usernameValue" type="text" value={this.state.usernameValue} onChange={this.handleChange} />
                         </label>
-                        <label class="my-14">
+                        <label class="my-7">
                         <p>Password:</p>
-                        <input class="rounded border-2 border-black-400 focus:outline-none focus:ring-2 focus:border-purple-300 pl-3 w-96 py-2" name="passwordValue" type="password" value={this.state.passwordValue} onChange={this.handleChange} />
+                        <input class="rounded border-2 border-black-400 focus:outline-none focus:ring-2 focus:border-purple-300 pl-3 w-96 py-2" name="password1Value" type="password" value={this.state.password1Value} onChange={this.handleChange} />
                         </label>
-                        <input type="submit" value="Sign in" class="rounded py-1 bg-purple-700 text-white hover:bg-purple-400 hover:text-black cursor-pointer"/>
+                        <label class="my-7">
+                        <p>Confirm Password:</p>
+                        <input class="rounded border-2 border-black-400 focus:outline-none focus:ring-2 focus:border-purple-300 pl-3 w-96 py-2" name="password2Value" type="password" value={this.state.password2Value} onChange={this.handleChange} />
+                        </label>
+                        <input type="submit" value="Create Account" class="rounded mt-5 py-1 bg-purple-700 text-white hover:bg-purple-400 hover:text-black cursor-pointer"/>
                         </div>
-                        <p>Don't have an account?</p> <Link to="/register">Register</Link>
+                        <p>Already have an account?</p> <Link to="/login">Login</Link>
                     </form>
                     </div>
                 </div>

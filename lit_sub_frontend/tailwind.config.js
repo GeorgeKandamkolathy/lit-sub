@@ -4,7 +4,14 @@ module.exports = {
   theme: {
     extend: {
       spacing:{
-        '100':'30rem'
+        '100':'30rem',
+        '85': '85%'
+      },
+      maxWidth: {
+        'max-w-40':'40%'
+      },
+      inset:{
+        '27%' : '27%'
       }
     },
   },

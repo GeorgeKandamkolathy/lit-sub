@@ -13,8 +13,7 @@ class MyAccountAuthentication(BasePermission):
     users in my_account_view
     """
     def has_permission(self, request, view):
-        if request.method == "POST" or request.method == "GET":
-            return request.user.is_authenticated
+        return request.user.is_authenticated
 
 class all_view(APIView):
     """
