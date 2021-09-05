@@ -64,7 +64,7 @@ class StoryTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Story.objects.all().count(), 1)
-        self.assertEqual(response.data[0]['story_title'], "bug")
+        self.assertEqual(response.data['results'][0]['story_title'], "bug")
 
     def test_get_specific_story(self):
         self.test_create_story()
@@ -303,8 +303,8 @@ class StoryTests(APITestCase):
         response = self.client.post(url, data=data)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['story_title'], 'title1')
-        self.assertEqual(response.data[1]['story_title'], "title2")
+        self.assertEqual(response.data['results'][0]['story_title'], 'title1')
+        self.assertEqual(response.data['results'][1]['story_title'], "title2")
     
     def test_group_search_parital_story(self):
         self.create_group_story()
@@ -314,8 +314,8 @@ class StoryTests(APITestCase):
         response = self.client.post(url, data=data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['story_title'], "title1")
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['story_title'], "title1")
 
     def test_group_search_none_story(self):
         url = reverse('story:group', args=["story"])
@@ -323,7 +323,7 @@ class StoryTests(APITestCase):
         response = self.client.post(url, data=data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
+        self.assertEqual(len(response.data['results']), 0)
     
     def create_group_comments(self):
         self.test_create_story()
@@ -343,8 +343,8 @@ class StoryTests(APITestCase):
         response = self.client.post(url, data=data)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['comment_text'], 'comment1')
-        self.assertEqual(response.data[1]['comment_text'], "comment2")
+        self.assertEqual(response.data['results'][0]['comment_text'], 'comment1')
+        self.assertEqual(response.data['results'][1]['comment_text'], "comment2")
     
     def test_group_search_parital_comment(self):
         self.create_group_comments()
@@ -354,8 +354,8 @@ class StoryTests(APITestCase):
         response = self.client.post(url, data=data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['comment_text'], "comment1")
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['comment_text'], "comment1")
 
     def test_group_search_none_comment(self):
         url = reverse('story:group', args=["comment"])
@@ -363,4 +363,4 @@ class StoryTests(APITestCase):
         response = self.client.post(url, data=data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
+        self.assertEqual(len(response.data['results']), 0)
