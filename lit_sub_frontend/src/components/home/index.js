@@ -24,11 +24,10 @@ export default class Home extends React.Component {
     }
 
     onClick(event){
-        const target = event.target;
-        const name = target.name;
+        const name = event.target.id;
 
-        if (name == "story"){
-            fetch(this.state.story_page)
+        if (name == "story" && this.state.next_story_page != null){
+            fetch(this.state.next_story_page)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -47,15 +46,15 @@ export default class Home extends React.Component {
                 }
             )
         }
-        else if (name == "author"){
-            fetch(this.state.author_page)
+        else if (name == "author" && this.state.next_author_page != null){
+            fetch(this.state.next_author_page)
             .then(res => res.json())
             .then(
                 (result) => {
                     this.setState({
                         isLoaded: true,
-                        authors: result,
-                        next_author_page: result.results,
+                        authors: result.results,
+                        next_author_page: result.next,
                         prev_author_page: result.previous,
                     });
                 },
@@ -70,7 +69,7 @@ export default class Home extends React.Component {
     }
 
     componentDidMount() {
-        fetch(this.state.story_page)
+        fetch(this.state.next_story_page)
         .then(res => res.json())
         .then(
             (result) => {
@@ -88,14 +87,14 @@ export default class Home extends React.Component {
                 });
             }
         )
-        fetch(this.state.author_page)
+        fetch(this.state.next_author_page)
         .then(res => res.json())
         .then(
             (result) => {
                 this.setState({
                     isLoaded: true,
-                    authors: result,
-                    next_author_page: result.results,
+                    authors: result.results,
+                    next_author_page: result.next,
                     prev_author_page: result.previous,
                 });
             },
@@ -140,8 +139,8 @@ export default class Home extends React.Component {
                             ))}
                             </div>
                             </ul>   
-                            <button onClick={this.onClick}>
-                                <ArrowRightIcon class="transform h-5 w-5 hover:scale-150 hover:text-blue-700"/>
+                            <button  id="story" onClick={this.onClick}>
+                                <ArrowRightIcon id="story" class="transform h-5 w-5 hover:scale-150 hover:text-blue-700"/>
                             </button>
                         </div>
                     </div>
@@ -162,8 +161,8 @@ export default class Home extends React.Component {
                             ))}
                             </div>
                             </ul>   
-                            <button onClick={this.onClick}>
-                                <ArrowRightIcon class="transform h-5 w-5 hover:scale-150 hover:text-blue-700"/>
+                            <button id="author" onClick={this.onClick}>
+                                <ArrowRightIcon id="author" class="transform h-5 w-5 hover:scale-150 hover:text-blue-700"/>
                             </button>
                             </div>
                     </div>    
