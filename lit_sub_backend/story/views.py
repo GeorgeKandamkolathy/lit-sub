@@ -1,3 +1,4 @@
+from rest_framework import pagination
 from .models import Comment, Story, Like
 from .serializers import StorySerializer, CommentSerializer
 from django.http import Http404
@@ -6,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import BasePermission
 from django.shortcuts import get_object_or_404
+from rest_framework.pagination import LimitOffsetPagination
 
 class TokenAuthentication(BasePermission):
 
@@ -28,11 +30,16 @@ class all_view(APIView):
     Implement different order return???
     """
     permission_classes=[TokenAuthentication]
+    pagination_class = LimitOffsetPagination
 
     def get(self, request):
         stories = Story.objects.all()
-        serializer = StorySerializer(stories, many=True)
-        return Response(serializer.data)    
+
+        paginator = self.pagination_class()
+        result_page = paginator.paginate_queryset(stories, request)
+        serializer = StorySerializer(result_page, many=True, context={'request':request})
+        
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
         data = request.data
@@ -156,17 +163,27 @@ class like_view(APIView):
 
 class group_return(APIView):
 
+    pagination_class = LimitOffsetPagination
+
     def post(self, request, obj):
         if obj == "story":
             id_string = request.data['ids']
             id_set = [int(id) for id in id_string.split(',')]
             stories = Story.objects.filter(id__in=id_set)
-            serializer = StorySerializer(stories, many=True)
-            return Response(serializer.data, status.HTTP_200_OK)
-        
+            
+            paginator = self.pagination_class()
+            result_page = paginator.paginate_queryset(stories, request)
+            serializer = StorySerializer(result_page, many=True, context={'request':request})
+            
+            return paginator.get_paginated_response(serializer.data)    
+
         elif obj == "comment":
             id_string = request.data['ids']
             id_set = [int(id) for id in id_string.split(',')]
             comments = Comment.objects.filter(id__in=id_set)
-            serializer = CommentSerializer(comments, many=True)
-            return Response(serializer.data, status.HTTP_200_OK)
+            
+            paginator = self.pagination_class()
+            result_page = paginator.paginate_queryset(comments, request)
+            serializer = CommentSerializer(result_page, many=True, context={'request':request})
+            
+            return paginator.get_paginated_response(serializer.data)    
