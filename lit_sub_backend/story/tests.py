@@ -295,10 +295,10 @@ class StoryTests(APITestCase):
         self.create_story_helper("test2", "title2")
         self.create_story_helper("test3", "title3")
 
-    def test_group_search(self):
+    def test_group_search_story(self):
         self.create_group_story()
         
-        url = reverse('story:group')
+        url = reverse('story:group', args=["story"])
         data = {"ids":"1,2"}
         response = self.client.post(url, data=data)
         
@@ -306,10 +306,10 @@ class StoryTests(APITestCase):
         self.assertEqual(response.data[0]['story_title'], 'title1')
         self.assertEqual(response.data[1]['story_title'], "title2")
     
-    def test_group_search_parital(self):
+    def test_group_search_parital_story(self):
         self.create_group_story()
 
-        url = reverse('story:group')
+        url = reverse('story:group', args=["story"])
         data = {"ids": "1,7"}
         response = self.client.post(url, data=data)
 
@@ -317,8 +317,48 @@ class StoryTests(APITestCase):
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['story_title'], "title1")
 
-    def test_group_search_none(self):
-        url = reverse('story:group')
+    def test_group_search_none_story(self):
+        url = reverse('story:group', args=["story"])
+        data = {"ids": "1,7"}
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+    
+    def create_group_comments(self):
+        self.test_create_story()
+        url = reverse('story:detail', args=[1])
+        response = self.client.post(url, data={"comment_text": "comment1"}, format="json")
+        response = self.client.post(url, data={"comment_text": "comment2"}, format="json")
+        response = self.client.post(url, data={"comment_text": "comment3"}, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
+    def test_group_search_comment(self):
+        self.create_group_comments()
+
+        url = reverse('story:group', args=["comment"])
+        data = {"ids":"1,2"}
+        response = self.client.post(url, data=data)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['story_title'], 'title1')
+        self.assertEqual(response.data[1]['story_title'], "title2")
+    
+    def test_group_search_parital_comment(self):
+        self.create_group_comments()
+
+        url = reverse('story:group', args=["comment"])
+        data = {"ids": "1,7"}
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['story_title'], "title1")
+
+    def test_group_search_none_comment(self):
+        url = reverse('story:group', args=["comment"])
         data = {"ids": "1,7"}
         response = self.client.post(url, data=data)
 
