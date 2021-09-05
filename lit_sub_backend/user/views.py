@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from rest_framework.permissions import BasePermission
+from rest_framework.pagination import LimitOffsetPagination
 
 
 class MyAccountAuthentication(BasePermission):
@@ -23,10 +24,16 @@ class all_view(APIView):
     [post] = add new user 
     """
 
+    pagination_class = LimitOffsetPagination
+
     def get(self, request):
         authors = User.objects.all()
-        serializer = UserSerializer(authors, many=True)
-        return Response(serializer.data)    
+
+        paginator = self.pagination_class()
+        result_page = paginator.paginate_queryset(authors, request)
+        serializer = UserSerializer(result_page, many=True, context={'request':request})
+        
+        return paginator.get_paginated_response(serializer.data)
 
     # Replace with dj_rest_auth
     def post(self,request):
