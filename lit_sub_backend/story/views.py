@@ -87,12 +87,16 @@ class story_view(APIView):
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_403_FORBIDDEN)
     
+
 class comment_view(APIView):
     """
     comment_view returns all comments of a story and has the delete method
 
     [get] = return the comments of a given story
     [delete] = deletes a comment from a story
+    *** FIX ***
+    Two urls for get and delete
+
     """
     
     def get(self, request, story_id, comment_id):
@@ -149,3 +153,20 @@ class like_view(APIView):
             comment.save() 
             serializer = CommentSerializer(comment)
             return Response(serializer.data, status=status.HTTP_200_OK)
+
+class group_return(APIView):
+
+    def post(self, request, obj):
+        if obj == "story":
+            id_string = request.data['ids']
+            id_set = [int(id) for id in id_string.split(',')]
+            stories = Story.objects.filter(id__in=id_set)
+            serializer = StorySerializer(stories, many=True)
+            return Response(serializer.data, status.HTTP_200_OK)
+        
+        elif obj == "comment":
+            id_string = request.data['ids']
+            id_set = [int(id) for id in id_string.split(',')]
+            comments = Comment.objects.filter(id__in=id_set)
+            serializer = CommentSerializer(comments, many=True)
+            return Response(serializer.data, status.HTTP_200_OK)
