@@ -13,19 +13,72 @@ export default class Home extends React.Component {
             authors: [],
             stories: [],
             token: (this.props.location.state == undefined ? null : this.props.location.state.token),
+            prev_story_page: null,
+            next_story_page: "http://127.0.0.1:8000/story/",
+            prev_author_page: null,
+            next_author_page: "http://127.0.0.1:8000/author/",
+            
         };
         this.url = "http://127.0.0.1:8000/" 
+        this.onClick = this.onClick.bind(this)
     }
 
-    
+    onClick(event){
+        const target = event.target;
+        const name = target.name;
+
+        if (name == "story"){
+            fetch(this.state.story_page)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        isLoaded: true,
+                        stories: result.results,
+                        next_story_page: result.next,
+                        prev_story_page: result.previous,
+                    });
+                },
+                (error) => {
+                    this.setState({
+                    isLoaded: true,
+                    error
+                    });
+                }
+            )
+        }
+        else if (name == "author"){
+            fetch(this.state.author_page)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        isLoaded: true,
+                        authors: result,
+                        next_author_page: result.results,
+                        prev_author_page: result.previous,
+                    });
+                },
+                (error) => {
+                    this.setState({
+                      isLoaded: true,
+                      error
+                    });
+                }
+            )
+        }
+    }
+
     componentDidMount() {
-        fetch(this.url + "story/")
+        fetch(this.state.story_page)
         .then(res => res.json())
         .then(
             (result) => {
                 this.setState({
                     isLoaded: true,
-                    stories: result
+                    stories: result.results,
+                    next_story_page: result.next,
+                    prev_story_page: result.previous,
                 });
             },
             (error) => {
@@ -35,13 +88,15 @@ export default class Home extends React.Component {
                 });
             }
         )
-        fetch(this.url + "author/")
+        fetch(this.state.author_page)
         .then(res => res.json())
         .then(
             (result) => {
                 this.setState({
                     isLoaded: true,
-                    authors: result
+                    authors: result,
+                    next_author_page: result.results,
+                    prev_author_page: result.previous,
                 });
             },
             (error) => {
@@ -85,7 +140,7 @@ export default class Home extends React.Component {
                             ))}
                             </div>
                             </ul>   
-                            <button>
+                            <button onClick={this.onClick}>
                                 <ArrowRightIcon class="transform h-5 w-5 hover:scale-150 hover:text-blue-700"/>
                             </button>
                         </div>
@@ -107,6 +162,9 @@ export default class Home extends React.Component {
                             ))}
                             </div>
                             </ul>   
+                            <button onClick={this.onClick}>
+                                <ArrowRightIcon class="transform h-5 w-5 hover:scale-150 hover:text-blue-700"/>
+                            </button>
                             </div>
                     </div>    
 
