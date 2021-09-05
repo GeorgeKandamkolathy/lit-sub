@@ -154,11 +154,19 @@ class like_view(APIView):
             serializer = CommentSerializer(comment)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-class group_story_return(APIView):
+class group_return(APIView):
 
-    def post(self, request):
-        id_string = request.data['ids']
-        id_set = [int(id) for id in id_string.split(',')]
-        stories = Story.objects.filter(id__in=id_set)
-        serializer = StorySerializer(stories, many=True)
-        return Response(serializer.data, status.HTTP_200_OK)
+    def post(self, request, obj):
+        if obj == "story":
+            id_string = request.data['ids']
+            id_set = [int(id) for id in id_string.split(',')]
+            stories = Story.objects.filter(id__in=id_set)
+            serializer = StorySerializer(stories, many=True)
+            return Response(serializer.data, status.HTTP_200_OK)
+        
+        elif obj == "comment":
+            id_string = request.data['ids']
+            id_set = [int(id) for id in id_string.split(',')]
+            comments = Comment.objects.filter(id__in=id_set)
+            serializer = CommentSerializer(comments, many=True)
+            return Response(serializer.data, status.HTTP_200_OK)
