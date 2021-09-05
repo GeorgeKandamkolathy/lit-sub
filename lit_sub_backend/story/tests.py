@@ -14,14 +14,31 @@ class StoryTests(APITestCase):
     USER = "Jose"
     PASS = "password"
 
-    def create_user(self):
-        get_user_model().objects.create_user(self.USER, '', self.PASS)
-        response = self.client.login(username=self.USER, password=self.PASS)
+    def create_user(self, user):
+        get_user_model().objects.create_user(user, '', self.PASS)
+        data={"username":self.USER, "password":self.PASS}
 
-        self.assertEqual(response, True)
+        url = reverse('rest_login')
+        response = self.client.post(url, {"username":user, "password":self.PASS}, format="json")
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['key'])
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def logout(self):
+        url = reverse('rest_logout')
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def create_story_helper(self, user, title):
+        self.create_user(user)
+
+        url = reverse('story:story')
+        data = {"story_text": "bug the end", "story_title": title}
+        response = self.client.post(url, data, format='json')
 
     def test_create_story(self):
-        self.create_user()
+        self.create_user(self.USER)
 
         url = reverse('story:story')
         data = {"story_text": "bug the end", "story_title": "bug"}
@@ -33,10 +50,11 @@ class StoryTests(APITestCase):
     
     def test_create_story_no_login(self):
         url = reverse('story:story')
+        self.logout()
         data = {"story_text": "bug the end", "story_title": "bug"}
         response = self.client.post(url, data, format='json')
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_all_story(self):
         self.test_create_story()
@@ -57,7 +75,7 @@ class StoryTests(APITestCase):
         self.assertEqual(response.data["story_title"], "bug")
 
     def test_create_empty_story(self):
-        self.create_user()
+        self.create_user(self.USER)
 
         url = reverse('story:story')
         data = {'story_text': '', 'story_title': 'bug'}
@@ -88,11 +106,22 @@ class StoryTests(APITestCase):
         url = reverse('story:detail', args=[1])
         response = self.client.delete(url)
 
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertTrue(Story.objects.all().exists())        
+
+    def test_delete_story_forbidden(self):
+        self.test_create_story()
+        self.client.logout()
+        self.create_user("test1")
+
+        url = reverse('story:detail', args=[1])
+        response = self.client.delete(url)
+
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertTrue(Story.objects.all().exists())        
     
     def test_delete_story_not_exist(self):
-        self.create_user()
+        self.create_user(self.USER)
 
         url = reverse('story:detail', args=[1])
         response = self.client.delete(url)
@@ -117,7 +146,7 @@ class StoryTests(APITestCase):
         url = reverse('story:detail', args=[1])
         response = self.client.post(url, data={"comment_text": "i like bug"}, format="json")
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
     
     def test_get_comment(self):
         self.test_post_comment()
@@ -157,7 +186,7 @@ class StoryTests(APITestCase):
         self.assertTrue(Comment.objects.all().exists())
     
     def test_delete_comment_not_exist(self):
-        self.create_user()
+        self.create_user(self.USER)
 
         url = reverse('story:comment', args=[1, 1])
         response = self.client.delete(url)
@@ -174,14 +203,14 @@ class StoryTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['likes'], 1)
 
-    def test_like_post_no_login(self):
+    def test_like_post_unauthorised(self):
         self.test_create_story()
         self.client.logout()
 
         url = reverse('story:like', args=["story",1])
         response = self.client.put(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)        
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)        
 
     def test_unlike_post(self):
         self.test_like_post()
@@ -192,14 +221,26 @@ class StoryTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['likes'], 0)
 
-    def test_unlike_post_no_login(self):
+    def test_unlike_post_unauthorised(self):
         self.test_like_post()
         self.client.logout()
 
         url = reverse('story:like', args=["story",1])
         response = self.client.put(url)
 
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    """
+    def test_unlike_post_forbidden(self):
+        self.test_like_post()
+        self.client.logout()
+        self.create_user("test1")
+
+        url = reverse('story:like', args=["story",1])
+        response = self.client.put(url)
+
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    """
 
     def test_like_comment(self):
         self.test_post_comment()
@@ -210,15 +251,15 @@ class StoryTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['likes'], 1)
 
-    def test_like_comment_no_login(self):
+    def test_like_comment_unauthorised(self):
         self.test_post_comment()
         self.client.logout()
 
         url = reverse('story:like', args=["comment",1])
         response = self.client.put(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)        
-
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)        
+     
     def test_unlike_comment(self):
         self.test_like_comment()
 
@@ -228,11 +269,58 @@ class StoryTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['likes'], 0)
 
-    def test_unlike_comment_no_login(self):
+    def test_unlike_comment_unauthorised(self):
         self.test_like_comment()
         self.client.logout()
 
         url = reverse('story:like', args=["comment",1])
         response = self.client.put(url)
 
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    """
+    def test_unlike_comment_forbidden(self):
+        self.test_like_comment()
+        self.client.logout()
+        self.create_user("test1")
+
+        url = reverse('story:like', args=["comment",1])
+        response = self.client.put(url)
+
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    """
+
+    def create_group_story(self):
+        self.create_story_helper("test1", "title1")
+        self.create_story_helper("test2", "title2")
+        self.create_story_helper("test3", "title3")
+
+    def test_group_search(self):
+        self.create_group_story()
+        
+        url = reverse('story:group')
+        data = {"ids":"1,2"}
+        response = self.client.post(url, data=data)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['story_title'], 'title1')
+        self.assertEqual(response.data[1]['story_title'], "title2")
+    
+    def test_group_search_parital(self):
+        self.create_group_story()
+
+        url = reverse('story:group')
+        data = {"ids": "1,7"}
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['story_title'], "title1")
+
+    def test_group_search_none(self):
+        url = reverse('story:group')
+        data = {"ids": "1,7"}
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
