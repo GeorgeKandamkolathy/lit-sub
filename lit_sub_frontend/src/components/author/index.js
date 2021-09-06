@@ -2,6 +2,8 @@ import React from 'react';
 import {Link} from 'react-router-dom'
 import NavBar from '../common/nav-bar';
 import profile from '../../local/profile.png'
+import Item from '../common/item';
+import { ThumbUpIcon } from '@heroicons/react/outline';
 
 export default class Author extends React.Component {
     constructor(props) {
@@ -60,28 +62,38 @@ export default class Author extends React.Component {
         return(
             <div>
                 <NavBar user={user} token={token}/>
-                <div class="flex">
+                <div className="flex">
                     <img src={profile}/>
-                    <div class="ml-10">
-                        <h3 class="text-8xl">{this.state.username}</h3>
-                        <p class="mt-10">Join date</p>
+                    <div className="ml-10">
+                        <h3 className="text-8xl">{this.state.username}</h3>
+                        <p className="mt-10">Join date</p>
                     </div>
                 </div>
                     <p>{this.state.bio}</p>
+                
+                <h3 className="text-3xl text-center">Stories</h3>
                 <ul>
-                    {this.state.stories.map(story => (
-                        <li key={story.id}>
-                            <div class="flex flex-col w-96">
-                                <div class="text-2xl font-bold hover:text-gray-600">
-                                    <Link to={{ pathname: "/story/" + story.id,
-                                        state: {token: this.state.token, user: this.state.user}}}>
-                                    {story.story_title}
-                                    </Link>
-                                </div>
-                                <div class="text-base">{story.synopsis}</div>
+                {this.state.stories.map(story => (
+                    <div className="flex justify-center">
+                    <li key={story.id} className="group w-1/2">
+                        <Item>
+                            <div className="flex flex-col ml-5 p-4 max-w-xs">
+                            <Link className="font-medium text-xl" 
+                                to={{ pathname: "/story/" + story.id,
+                                    state: {token: this.state.token, user: this.state.user}}}>
+                            {story.story_title}
+                            </Link>
+                            <div className="flex ml-2">
+                            <Link className="font-bold ml-4 w-auto" to={"author/"+story.author}>{story.author_name}</Link>
+                            <ThumbUpIcon className="w-4 h-4 mt-1 ml-4" />
+                            <p className="ml-1">{story.likes}</p>
                             </div>
-                        </li>
-                    ))}
+                            </div>
+                            <p className="mt-10 italic">{story.synopsis}</p>
+                        </Item>
+                    </li>  
+                    </div>
+                ))}
                 </ul>
             </div>
         );

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import NavBar from "../common/nav-bar";
 import { Listbox, Transition, RadioGroup} from '@headlessui/react';
 import { ThumbUpIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline';
+import Item from '../common/item';
 
 export default class StoryView extends React.Component {
     constructor(props) {
@@ -21,7 +22,7 @@ export default class StoryView extends React.Component {
     }
 
     componentDidMount(){
-        fetch(this.url + "story/")
+        fetch(this.url + "story/?limit=100&offset=0")
         .then(res => res.json())
         .then((result) =>
             this.setState({
@@ -138,8 +139,7 @@ export default class StoryView extends React.Component {
             {this.state.stories.map(story => (
                 <div class="flex justify-center">
                 <li key={story.id} class="group w-1/2">
-                <div class="flex mb-4 bg-purple-200 rounded border-2 border-blue-50 drop-shadow group-hover:border-gray-300">
-                    <div class="left-1/4 bg-purple-700 w-10 h-auto rounded group-hover:bg-blue-700"/>
+                <Item>
                     <div class="flex flex-col ml-5 p-4 max-w-xs">
                     <Link class="font-medium text-xl" 
                         to={{ pathname: "/story/" + story.id,
@@ -153,7 +153,7 @@ export default class StoryView extends React.Component {
                     </div>
                     </div>
                     <p class="mt-10 italic">{story.synopsis}</p>
-                </div>
+                </Item>
                 </li>  
                 </div>
             ))}

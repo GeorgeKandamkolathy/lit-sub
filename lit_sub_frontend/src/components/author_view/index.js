@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import NavBar from "../common/nav-bar";
 import { Listbox, Transition, RadioGroup} from '@headlessui/react';
 import { ThumbUpIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline';
+import Item from '../common/item';
 
 export default class AuthorView extends React.Component {
     constructor(props) {
@@ -21,7 +22,7 @@ export default class AuthorView extends React.Component {
     }
 
     componentDidMount(){
-        fetch(this.url + "author/")
+        fetch(this.url + "author/?limit=100&offset=0")
         .then(res => res.json())
         .then((result) =>
             this.setState({
@@ -138,8 +139,7 @@ export default class AuthorView extends React.Component {
             {this.state.authors.map(author => (
                 <div class="flex justify-center">
                 <li key={author.id} class="group w-1/2">
-                <div class="flex mb-4 bg-purple-200 rounded border-2 border-blue-50 drop-shadow group-hover:border-gray-300">
-                    <div class="left-1/4 bg-purple-700 w-10 h-auto rounded group-hover:bg-blue-700"/>
+                <Item>
                     <div class="flex flex-col ml-5 p-4 max-w-xs">
                     <Link class="font-medium text-xl" 
                         to={{ pathname: "/author/" + author.id,
@@ -149,7 +149,7 @@ export default class AuthorView extends React.Component {
                     <div class="flex ml-2">
                     </div>
                     </div>
-                </div>
+                </Item>
                 </li>  
                 </div>
             ))}
