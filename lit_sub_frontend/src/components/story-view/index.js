@@ -26,7 +26,7 @@ export default class StoryView extends React.Component {
         .then((result) =>
             this.setState({
                 isLoaded: true,
-                stories: result,
+                stories: result.results,
             }),
             (error) =>
             this.setState({
