@@ -12,6 +12,7 @@ export default class Author extends React.Component {
             user: (this.props.location.state == undefined ? null : this.props.location.state.user),
             bio: null,
             username: "",
+            stories_set:[],
             stories:[],
             author_id: this.props.match.params.author_id,
             token: (this.props.location.state == undefined ? null : this.props.location.state.token),
@@ -27,13 +28,30 @@ export default class Author extends React.Component {
                 isLoaded: true,
                 username: result.username,
                 bio: result.bio,
-                stories: result.story_set,
+                stories_set: result.story_set,
+            }, () => {
+                fetch(this.url + "story/group/story",{
+                    method:"POST",
+                    mode: 'cors', 
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ids:this.state.stories_set.toString()})
+                })
+                .then(res => res.json())
+                .then(
+                    (results) => this.setState({ 
+                        isLoaded: true,
+                        stories: results.results
+                    })
+                )
             }),
-            (error) => ({
+            (error) => this.setState({
                 isLoaded: true,
                 error
             })
         )
+
     }
 
     render(){
@@ -51,6 +69,19 @@ export default class Author extends React.Component {
                 </div>
                     <p>{this.state.bio}</p>
                 <ul>
+                    {this.state.stories.map(story => (
+                        <li key={story.id}>
+                            <div class="flex flex-col w-96">
+                                <div class="text-2xl font-bold hover:text-gray-600">
+                                    <Link to={{ pathname: "/story/" + story.id,
+                                        state: {token: this.state.token, user: this.state.user}}}>
+                                    {story.story_title}
+                                    </Link>
+                                </div>
+                                <div class="text-base">{story.synopsis}</div>
+                            </div>
+                        </li>
+                    ))}
                 </ul>
             </div>
         );

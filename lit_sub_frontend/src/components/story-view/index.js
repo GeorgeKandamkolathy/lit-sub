@@ -147,7 +147,7 @@ export default class StoryView extends React.Component {
                     {story.story_title}
                     </Link>
                     <div class="flex ml-2">
-                    <Link class="font-bold ml-4 w-auto" to={"author/"+story.author_name}>{story.author_name}</Link>
+                    <Link class="font-bold ml-4 w-auto" to={"author/"+story.author}>{story.author_name}</Link>
                     <ThumbUpIcon class="w-4 h-4 mt-1 ml-4" />
                     <p class="ml-1">{story.likes}</p>
                     </div>

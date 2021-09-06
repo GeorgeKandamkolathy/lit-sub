@@ -26,7 +26,7 @@ export default class AuthorView extends React.Component {
         .then((result) =>
             this.setState({
                 isLoaded: true,
-                authors: result,
+                authors: result.results,
             }),
             (error) =>
             this.setState({

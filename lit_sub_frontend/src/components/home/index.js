@@ -187,7 +187,7 @@ export default class Home extends React.Component {
                                         </Link>
                                     </div>
                                     <div class="text-base">{story.synopsis}</div>
-                                    <div class="text-base italic"><Link to="/author/">{story.author_name}</Link></div>
+                                    <div class="text-base italic"><Link to={"/author/" + story.author}>{story.author_name}</Link></div>
                                 </div>
                             </li>
                             ))}
