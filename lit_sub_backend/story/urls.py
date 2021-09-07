@@ -4,7 +4,7 @@ from . import views
 
 app_name = 'story'
 urlpatterns = [
-    path('', views.all_view.as_view(), name='story'),
+    path('sort/<str:order>/', views.all_view.as_view(), name='story'),
     path('<int:story_id>/', views.story_view.as_view(), name='detail'),
     path('group/<str:obj>', views.group_return.as_view(), name='group'),
     path('comments/<int:story_id>/<int:comment_id>', views.comment_view.as_view(), name='comment'),

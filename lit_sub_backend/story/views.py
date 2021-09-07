@@ -32,16 +32,21 @@ class all_view(APIView):
     permission_classes=[TokenAuthentication]
     pagination_class = LimitOffsetPagination
 
-    def get(self, request):
-        stories = Story.objects.all()
-
+    def get(self, request, order):
         paginator = self.pagination_class()
+
+        if order == "all":
+            stories = Story.objects.all()       
+        elif order == "top":
+            
+            stories = Story.objects.order_by('-likes')
+            
         result_page = paginator.paginate_queryset(stories, request)
         serializer = StorySerializer(result_page, many=True, context={'request':request})
         
         return paginator.get_paginated_response(serializer.data)
 
-    def post(self, request):
+    def post(self, request, order):
         data = request.data
         serializer = StorySerializer(data=data)
         if serializer.is_valid():
