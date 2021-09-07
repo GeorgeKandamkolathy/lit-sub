@@ -2,6 +2,8 @@ import React from 'react';
 import {Link} from 'react-router-dom'
 import NavBar from '../common/nav-bar';
 import profile from '../../local/profile.png'
+import Item from '../common/item';
+import { ThumbUpIcon } from '@heroicons/react/solid';
 
 export default class MyAccount extends React.Component {
     constructor(props) {
@@ -11,6 +13,7 @@ export default class MyAccount extends React.Component {
             isLoaded: false,
             user: (this.props.location.state == undefined ? null : this.props.location.state.user),
             bio: null,
+            stories_set:[],
             stories:[],
             token: (this.props.location.state == undefined ? null : this.props.location.state.token),
         };
@@ -65,7 +68,23 @@ export default class MyAccount extends React.Component {
             (result) => this.setState({
                 isLoaded: true,
                 bio: result.bio,
-                stories: result.story_set,
+                stories_set: result.story_set,
+            }, () => {
+                fetch(this.url + "story/group/story", {
+                    method: "POST",
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ids:this.state.stories_set.toString()})
+                })
+                .then(res => res.json())
+                .then(
+                    (result) => {this.setState({
+                        stories: result.results
+                    })
+                    }
+                )
             }),
             (error) => ({
                 isLoaded: true,
@@ -92,6 +111,30 @@ export default class MyAccount extends React.Component {
                          </form>
                     </div>
                 </div>
+                <h3 className="text-3xl text-center mb-3 underline">Stories</h3>
+                <ul>
+                {this.state.stories.map(story => (
+                    <div className="flex justify-center">
+                    <li key={story.id} className="group w-1/2">
+                        <Item>
+                            <div className="flex flex-col ml-5 p-4 max-w-xs">
+                            <Link className="font-medium text-xl" 
+                                to={{ pathname: "/story/" + story.id,
+                                    state: {token: this.state.token, user: this.state.user}}}>
+                            {story.story_title}
+                            </Link>
+                            <div className="flex ml-2">
+                            <ThumbUpIcon className="w-4 h-4 mt-1 ml-4" />
+                            <p className="ml-1">{story.likes}</p>
+                            </div>
+                            </div>
+                            <p className="mt-10 italic">{story.synopsis}</p>
+                        </Item>
+                    </li>  
+                    <button>Delete</button>
+                    </div>
+                ))}
+                </ul>
                 <ul>
                 </ul>
             </div>

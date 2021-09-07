@@ -71,7 +71,7 @@ export default class Author extends React.Component {
                 </div>
                     <p>{this.state.bio}</p>
                 
-                <h3 className="text-3xl text-center">Stories</h3>
+                <h3 className="text-3xl text-center mb-3 underline">Stories</h3>
                 <ul>
                 {this.state.stories.map(story => (
                     <div className="flex justify-center">

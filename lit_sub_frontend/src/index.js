@@ -16,6 +16,7 @@ import Register from './components/register';
 import MyAccount from './components/account';
 import AuthorView from './components/author_view';
 import Author from './components/author';
+import StoryEdit from './components/story-edit';
 import {v4 as uuid} from 'uuid';
 
 ReactDOM.render(
@@ -28,6 +29,7 @@ ReactDOM.render(
         <Route exact path="/submit" render={(props) => <StorySubmit {...props}/>}/>
         <Route exact path="/story" render={(props) => <StoryView {...props}/>}/>
         <Route exact path="/me" render={(props) => <MyAccount {...props}/>}/>
+        <Route exat path="/story/:story_id/edit" render={(props) => <StoryEdit {...props}/>}/>
         <Route path="/story/:story_id" render={(props) => <Story {...props}/>}/>
   </BrowserRouter>,
   document.getElementById('root')

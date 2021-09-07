@@ -25,8 +25,6 @@ class all_view(APIView):
     """
     [get] = full story list
     [post] = new story
-    [delete] = delete story
-    
     Implement different order return???
     """
     permission_classes=[TokenAuthentication]
@@ -51,11 +49,9 @@ class all_view(APIView):
     
 class story_view(APIView):
     """
-    my_account_view returns the data of the currently authenticated user
-    and allows changes to bio
-
-    [get] = return current authenticated user's data
-    [post] = post comment to current story
+    [get] = Get single story
+    [post] = Post comment to story
+    [delete] = delete story
     """
 
     permission_classes=[TokenAuthentication]
