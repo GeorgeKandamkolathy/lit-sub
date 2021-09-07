@@ -140,7 +140,7 @@ class like_view(APIView):
     def put(self, request, obj, obj_id):
         if obj == "story":
             story = get_object_or_404(Story, id=obj_id)
-            if Like.objects.filter(story=story).exists():
+            if Like.objects.filter(story=story, author=request.user).exists():
                 Like.objects.filter(story=story).delete()
                 story.likes = story.likes - 1
             else:

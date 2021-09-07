@@ -19,6 +19,7 @@ class StoryTests(APITestCase):
 
         url = reverse('rest_login')
         response = self.client.post(url, {"username":user, "password":self.PASS}, format="json")
+        print(response.data)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['key'])
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -370,7 +371,6 @@ class StoryTests(APITestCase):
         # like/<str:obj>/<int:obj_id>
         url = reverse('story:like', args=["story", 2])
         response = self.client.put(url)
-        self.logout()
         self.create_user("spooderman")
         response = self.client.put(url)
 
