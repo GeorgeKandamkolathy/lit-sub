@@ -16,10 +16,10 @@ class StoryTests(APITestCase):
 
     def create_user(self, user):
         get_user_model().objects.create_user(user, '', self.PASS)
-        data={"username":self.USER, "password":self.PASS}
 
         url = reverse('rest_login')
         response = self.client.post(url, {"username":user, "password":self.PASS}, format="json")
+        print(response.data)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['key'])
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -33,14 +33,14 @@ class StoryTests(APITestCase):
     def create_story_helper(self, user, title):
         self.create_user(user)
 
-        url = reverse('story:story')
+        url = reverse('story:story', args=["all"])
         data = {"story_text": "bug the end", "story_title": title}
         response = self.client.post(url, data, format='json')
 
     def test_create_story(self):
         self.create_user(self.USER)
 
-        url = reverse('story:story')
+        url = reverse('story:story', args=["all"])
         data = {"story_text": "bug the end", "story_title": "bug"}
         response = self.client.post(url, data, format='json')
 
@@ -49,22 +49,12 @@ class StoryTests(APITestCase):
         self.assertEqual(response.data['author_name'], self.USER)
     
     def test_create_story_no_login(self):
-        url = reverse('story:story')
+        url = reverse('story:story', args=["all"])
         self.logout()
         data = {"story_text": "bug the end", "story_title": "bug"}
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_get_all_story(self):
-        self.test_create_story()
-
-        url = reverse('story:story')
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Story.objects.all().count(), 1)
-        self.assertEqual(response.data['results'][0]['story_title'], "bug")
 
     def test_get_specific_story(self):
         self.test_create_story()
@@ -77,7 +67,7 @@ class StoryTests(APITestCase):
     def test_create_empty_story(self):
         self.create_user(self.USER)
 
-        url = reverse('story:story')
+        url = reverse('story:story', args=["all"])
         data = {'story_text': '', 'story_title': 'bug'}
         response = self.client.post(url, data, format='json')
 
@@ -364,3 +354,35 @@ class StoryTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 0)
+
+    def test_get_all_story_order_all(self):
+        self.test_create_story()
+
+        url = reverse('story:story', args=["all"])
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Story.objects.all().count(), 1)
+        self.assertEqual(response.data['results'][0]['story_title'], "bug")
+
+    def test_get_all_story_order_top(self):
+        self.create_group_story()
+
+        # like/<str:obj>/<int:obj_id>
+        url = reverse('story:like', args=["story", 2])
+        response = self.client.put(url)
+        self.create_user("spooderman")
+        response = self.client.put(url)
+
+        url = reverse('story:like', args=['story', 3])
+        response = self.client.put(url)
+
+        url = reverse('story:story', args=["top"])
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        print(response.data)
+
+        self.assertEqual(response.data["results"][0]["id"], 2)
+        self.assertEqual(response.data["results"][2]["id"], 1)
