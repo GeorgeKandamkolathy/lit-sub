@@ -20,6 +20,26 @@ export default class StoryPublic extends React.Component {
         this.url = "http://127.0.0.1:8000/" 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.onLike = this.onLike.bind(this);
+    }
+
+    onLike(){
+        fetch(this.url + "story/like/story/" + this.state.story_id + "/", {
+            method: "PUT",
+            mode: "cors",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + this.state.token,
+            }
+        })
+        .then(res => res.json())
+        .then(
+            (result) => {
+                this.setState({
+                    story: result
+                })
+            }
+        )
     }
 
     handleChange(event){
@@ -106,9 +126,12 @@ export default class StoryPublic extends React.Component {
                         </div>
                         </div>
 
-                        <div class="flex">
-                        <p class="ml-72 mb-5">{this.state.comments.length} comments</p>
-                        <ThumbUpIconOutline className="h-5 w-5"/>
+                        <div class="flex justify-around">
+                        <p class="mb-5">{this.state.comments.length} comments</p>
+                        <div className="flex gap-3">
+                        <p className="">{story.likes}</p>
+                        <ThumbUpIconOutline className="h-7 w-7 cursor-pointer" onClick={this.onLike}/>
+                        </div>
                         </div>
                         <form onSubmit={this.handleSubmit} class="flex justify-center mb-5">
                             <textarea class="resize-none w-6/12 rounded border-2 border-black-400 focus:outline-none focus:ring-2 focus:border-purple-300" rows="1" cols="30" name="comment_text" value={this.state.comment_text} onChange={this.handleChange}/>

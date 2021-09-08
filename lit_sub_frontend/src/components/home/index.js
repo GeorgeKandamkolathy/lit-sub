@@ -14,7 +14,7 @@ export default class Home extends React.Component {
             stories: [],
             token: (this.props.location.state == undefined ? null : this.props.location.state.token),
             prev_story_page: null,
-            next_story_page: "http://127.0.0.1:8000/story/?limit=12&offset=0",
+            next_story_page: "http://127.0.0.1:8000/story/sort/top/?limit=12&offset=0",
             story_offset: 0,
             prev_author_page: null,
             next_author_page: "http://127.0.0.1:8000/author/?limit=24&offset=0",

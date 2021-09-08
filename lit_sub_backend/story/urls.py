@@ -9,5 +9,5 @@ urlpatterns = [
     path('group/<str:obj>', views.group_return.as_view(), name='group'),
     path('comments/<int:story_id>/<int:comment_id>', views.comment_view.as_view(), name='comment'),
     #regex path 
-    path('like/<str:obj>/<int:obj_id>', views.like_view.as_view(), name='like'),
+    path('like/<str:obj>/<int:obj_id>/', views.like_view.as_view(), name='like'),
 ] 

@@ -14,15 +14,34 @@ export default class StoryView extends React.Component {
             user: (this.props.location.state == undefined ? null : this.props.location.state.user),
             stories: [],
             token: (this.props.location.state == undefined ? null : this.props.location.state.token),
-            selectedOrder: "Top",
+            selectedOrder: "top",
             selectedTime: "7 Days",
         };
         this.url = "http://127.0.0.1:8000/" 
         this.componentDidMount = this.componentDidMount.bind(this)
+        this.onChange = this.onChange.bind(this)
+    }
+
+    onChange(value){
+        this.setState({
+            selectedOrder: value
+        }, () => fetch(this.url + "story/sort/"+ this.state.selectedOrder +"/?limit=100&offset=0")
+        .then(res => res.json())
+        .then((result) =>
+            this.setState({
+                isLoaded: true,
+                stories: result.results,
+            }),
+            (error) =>
+            this.setState({
+                isLoaded: true,
+                error,
+            })
+        ))
     }
 
     componentDidMount(){
-        fetch(this.url + "story/?limit=100&offset=0")
+        fetch(this.url + "story/sort/top/?limit=100&offset=0")
         .then(res => res.json())
         .then((result) =>
             this.setState({
@@ -37,6 +56,22 @@ export default class StoryView extends React.Component {
         )
     }
     
+/*    shouldComponentUpdate(){
+        fetch(this.url + "story/sort/"+ this.state.selectedOrder +"/?limit=100&offset=0")
+        .then(res => res.json())
+        .then((result) =>
+            this.setState({
+                isLoaded: true,
+                stories: result.results,
+            }),
+            (error) =>
+            this.setState({
+                isLoaded: true,
+                error,
+            })
+        )    
+    }
+*/
     render(){
         const {user, token, stories, error, selectedTime, selectedOrder} = this.state
         return(
@@ -48,7 +83,7 @@ export default class StoryView extends React.Component {
                 All Stories
             </h2>
             <div class="absolute text-center left-27% top-12">
-            <Listbox value={selectedOrder} onChange={(value) => {this.setState({selectedOrder:value})}}>
+            <Listbox value={selectedOrder} onChange={this.onChange}>
                 <Listbox.Button class="inline-flex text-xl bg-gray-100 rounded-full w-auto pb-1 px-3 hover:bg-gray-300">
                     {selectedOrder}
                     <ChevronDownIcon
@@ -68,7 +103,7 @@ export default class StoryView extends React.Component {
                 <Listbox.Options class="absolute left-1 w-20 mt-2 text-center bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <Listbox.Option
                         key={1}
-                        value={"Top"}
+                        value={"top"}
                     >
                         {({active}) => (
                         <p 
@@ -80,14 +115,26 @@ export default class StoryView extends React.Component {
                         )}
                     </Listbox.Option>
                     <Listbox.Option
-                        key={1}
-                        value={"New"}
+                        key={2}
+                        value={"new"}
                     >
                         {({active}) => (
                         <p 
                             class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} 
                             group flex rounded-md items-center w-full px-1 py-2 text-sm cursor-pointer`}>
                         New
+                        </p>
+                        )}
+                    </Listbox.Option>
+                    <Listbox.Option
+                        key={3}
+                        value={"all"}
+                    >
+                        {({active}) => (
+                        <p 
+                            class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} 
+                            group flex rounded-md items-center w-full px-1 py-2 text-sm cursor-pointer`}>
+                        All
                         </p>
                         )}
                     </Listbox.Option>
