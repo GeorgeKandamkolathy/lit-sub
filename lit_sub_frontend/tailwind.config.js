@@ -12,6 +12,9 @@ module.exports = {
       },
       inset:{
         '27%' : '27%'
+      },
+      minHeight: {
+        '24' : '6rem'
       }
     },
   },

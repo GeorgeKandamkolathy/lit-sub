@@ -176,9 +176,9 @@ export default class Home extends React.Component {
                             )
                             }
                             <ul>
-                            <div class="grid grid-cols-3 gap-x-4 gap-y-14 mt-6 -ml-10" >
+                            <div class="grid grid-cols-3 gap-x-4 mt-6 -ml-10" >
                             {this.state.stories.slice(this.state.story_offset, this.state.story_offset + 6).map(story => (
-                            <li key={story.id}>
+                            <li key={story.id} className="min-h-24">
                                 <div class="flex flex-col w-96">
                                     <div class="text-2xl font-bold hover:text-gray-600">
                                         <Link to={{ pathname: "/story/" + story.id,
@@ -199,7 +199,7 @@ export default class Home extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div class="bg-blue-600 bg-opacity-25 mt-16 shadow-lg">
+                    <div class="bg-blue-600 bg-opacity-25 mt-16 shadow-lg h-auto">
                         <div class="relative flex flex-row h-72 pl-10 gap-20">
                         <div>
                         <h3 class="text-blue-600 font-bold text-4xl w-12 mt-24 mr-8">Popular Authors</h3>
@@ -217,7 +217,7 @@ export default class Home extends React.Component {
                             <div class="grid grid-cols-4 gap-x-4 gap-y-7 mt-6" >
                             {this.state.authors.slice(this.state.author_offset, this.state.author_offset + 12).map(author => (
                             <li key={author.id}>
-                                <div class="flex flex-col w-80">
+                                <div class="flex flex-col w-70">
                                     <div class="text-2xl font-bold"><Link to={{ pathname: "/author/"+ author.id,
                                             state: {token: this.state.token, user: this.state.user}}}>{author.username}</Link></div>
                                     <div class="text-base italic">{author.bio}</div>

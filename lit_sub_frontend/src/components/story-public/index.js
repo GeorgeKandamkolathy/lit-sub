@@ -64,15 +64,19 @@ export default class StoryPublic extends React.Component {
             body: JSON.stringify({comment_text:this.state.comment_text})
         })
         .then(data => data.json())
-        .then((result) => {
-            this.setState({
-            })},
+        .then(
+            (result) => {
+                this.setState({
+                    comments: this.state.comments.concat(result),
+                    comment_text: "",
+                })
+            },
             (error) => {
                 this.setState({
                     error: error,
                 })
             }
-            )        
+        ) 
     }
 
     componentDidMount(){
