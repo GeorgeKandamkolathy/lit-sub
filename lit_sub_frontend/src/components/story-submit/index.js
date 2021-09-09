@@ -15,6 +15,7 @@ export default class StorySubmit extends React.Component {
             story_text: null,
             story_title: null,
             synopsis: null,
+            submitted: false,
         };
         this.url = "http://127.0.0.1:8000/" 
         this.handleChange = this.handleChange.bind(this)
@@ -34,7 +35,7 @@ export default class StorySubmit extends React.Component {
 
     onSubmit(event){
         event.preventDefault();
-        fetch(this.url+'story/', {
+        fetch(this.url+'story/submit/', {
             method: 'POST',
             mode: 'cors', 
             headers: {
@@ -47,6 +48,7 @@ export default class StorySubmit extends React.Component {
         .then(
             (error)=>{
                 this.setState({
+                    submitted: true,
                     error
                 })
             }

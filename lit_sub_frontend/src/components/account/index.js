@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom'
 import NavBar from '../common/nav-bar';
 import profile from '../../local/profile.png'
 import Item from '../common/item';
-import { ThumbUpIcon } from '@heroicons/react/solid';
+import { ThumbUpIcon, TrashIcon } from '@heroicons/react/solid';
 
 export default class MyAccount extends React.Component {
     constructor(props) {
@@ -20,6 +20,18 @@ export default class MyAccount extends React.Component {
         this.url = "http://127.0.0.1:8000/" 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.onDelete = this.onDelete.bind(this);
+    }
+
+    onDelete(event){
+        fetch(this.url+'story/' + event.target.id+ '/',{
+            method: "DELETE",
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + this.state.token
+            },
+        })
     }
 
     handleChange(event){
@@ -131,7 +143,9 @@ export default class MyAccount extends React.Component {
                             <p className="mt-10 italic">{story.synopsis}</p>
                         </Item>
                     </li>  
-                    <button>Delete</button>
+                    <button onClick={this.onDelete} id={story.id} className="rounded py-1 bg-purple-700 h-28 text-white hover:bg-purple-400 hover:text-black cursor-pointer">
+                        <TrashIcon className="h-5 w-16"/>
+                    </button>
                     </div>
                 ))}
                 </ul>

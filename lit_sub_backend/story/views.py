@@ -44,14 +44,18 @@ class all_view(APIView):
         
         return paginator.get_paginated_response(serializer.data)
 
-    def post(self, request, order):
+class submit_view(APIView):
+    
+    permission_classes=[TokenAuthentication]
+
+    def post(self, request):
         data = request.data
         serializer = StorySerializer(data=data)
         if serializer.is_valid():
             serializer.save(author=request.user, author_name=request.user.username)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
-    
+
 class story_view(APIView):
     """
     [get] = Get single story

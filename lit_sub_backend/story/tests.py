@@ -33,14 +33,14 @@ class StoryTests(APITestCase):
     def create_story_helper(self, user, title):
         self.create_user(user)
 
-        url = reverse('story:story', args=["all"])
+        url = reverse('story:submit')
         data = {"story_text": "bug the end", "story_title": title}
         response = self.client.post(url, data, format='json')
 
     def test_create_story(self):
         self.create_user(self.USER)
 
-        url = reverse('story:story', args=["all"])
+        url = reverse('story:submit')
         data = {"story_text": "bug the end", "story_title": "bug"}
         response = self.client.post(url, data, format='json')
 
@@ -49,7 +49,7 @@ class StoryTests(APITestCase):
         self.assertEqual(response.data['author_name'], self.USER)
     
     def test_create_story_no_login(self):
-        url = reverse('story:story', args=["all"])
+        url = reverse('story:submit')
         self.logout()
         data = {"story_text": "bug the end", "story_title": "bug"}
         response = self.client.post(url, data, format='json')
@@ -67,7 +67,7 @@ class StoryTests(APITestCase):
     def test_create_empty_story(self):
         self.create_user(self.USER)
 
-        url = reverse('story:story', args=["all"])
+        url = reverse('story:submit')
         data = {'story_text': '', 'story_title': 'bug'}
         response = self.client.post(url, data, format='json')
 
@@ -358,7 +358,7 @@ class StoryTests(APITestCase):
     def test_get_all_story_order_all(self):
         self.test_create_story()
 
-        url = reverse('story:story', args=["all"])
+        url = reverse('story:sort', args=["all"])
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -377,7 +377,7 @@ class StoryTests(APITestCase):
         url = reverse('story:like', args=['story', 3])
         response = self.client.put(url)
 
-        url = reverse('story:story', args=["top"])
+        url = reverse('story:sort', args=["top"])
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
