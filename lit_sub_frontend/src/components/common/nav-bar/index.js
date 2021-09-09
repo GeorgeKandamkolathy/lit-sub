@@ -39,7 +39,7 @@ export default class NavBar extends React.Component{
 
     /* 
     ***FIX***
-    Navbar rendering below other components 
+    Navbar rendering below other components - FIXED
     */
 
     render() {
@@ -47,9 +47,10 @@ export default class NavBar extends React.Component{
         return(
             <div className="bg-white">
                 <div class="relative flex justify-center mt-4 pb-4">
-                <p class="absolute left-48 text-3xl font-bold">LITSUB</p>
+                <Link to={{pathname: "/", state: { token: this.state.token, user: this.state.user}}} class="absolute left-48 font-medium rounded-md px-2 pt-1 pb-2 text-lg hover:text-purple-700">
+                    <p class="text-3xl font-bold">LITSUB</p>
+                </Link>
                     <div class="">
-                    <Link to={{pathname: "/", state: { token: this.state.token, user: this.state.user}}} class="m-8 font-medium rounded-md px-2 pt-1 pb-2 text-lg hover:underline hover:bg-purple-100">Home</Link>
                     <Link to={{pathname: "/story", state: { token: this.state.token, user: this.state.user}}} class="m-16 text-lg hover:text-gray-600">Stories</Link>
                     <Link to={{pathname: "/authors", state: { token: this.state.token, user: this.state.user}}} class="m-8 text-lg hover:text-gray-600">Authors</Link>
                     </div>
