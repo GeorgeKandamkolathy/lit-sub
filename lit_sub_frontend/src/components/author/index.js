@@ -75,7 +75,7 @@ export default class Author extends React.Component {
                 <ul>
                 {this.state.stories.map(story => (
                     <div className="flex justify-center">
-                    <li key={story.id} className="group w-1/2">
+                    <li key={story.id} className="group w-1/2 mb-4">
                         <Item>
                             <div className="flex flex-col ml-5 p-4 max-w-xs">
                             <Link className="font-medium text-xl" 
@@ -84,7 +84,8 @@ export default class Author extends React.Component {
                             {story.story_title}
                             </Link>
                             <div className="flex ml-2">
-                            <Link className="font-bold ml-4 w-auto" to={"author/"+story.author}>{story.author_name}</Link>
+                            <Link className="font-bold ml-4 w-auto" to={{ pathname: "/author/"+ story.author,
+                                            state: {token: this.state.token, user: this.state.user}}}>{story.author_name}</Link>
                             <ThumbUpIcon className="w-4 h-4 mt-1 ml-4" />
                             <p className="ml-1">{story.likes}</p>
                             </div>

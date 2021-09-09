@@ -142,10 +142,10 @@ export default class MyAccount extends React.Component {
                             </div>
                             <p className="mt-10 italic">{story.synopsis}</p>
                         </Item>
-                    </li>  
-                    <button onClick={this.onDelete} id={story.id} className="rounded py-1 bg-purple-700 h-28 text-white hover:bg-purple-400 hover:text-black cursor-pointer">
+                        <button onClick={this.onDelete} id={story.id} className="rounded py-1 mt-2 mb-2 bg-purple-700 text-white hover:bg-purple-400 hover:text-black cursor-pointer">
                         <TrashIcon className="h-5 w-16"/>
-                    </button>
+                        </button>
+                    </li>  
                     </div>
                 ))}
                 </ul>

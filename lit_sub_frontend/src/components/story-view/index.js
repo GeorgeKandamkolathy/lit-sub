@@ -185,7 +185,7 @@ export default class StoryView extends React.Component {
             <ul>
             {this.state.stories.map(story => (
                 <div class="flex justify-center">
-                <li key={story.id} class="group w-1/2">
+                <li key={story.id} class="group w-1/2 mb-2">
                 <Item>
                     <div class="flex flex-col ml-5 p-4 max-w-xs">
                     <Link class="font-medium text-xl" 

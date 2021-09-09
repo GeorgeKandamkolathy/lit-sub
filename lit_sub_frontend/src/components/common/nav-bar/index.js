@@ -45,7 +45,7 @@ export default class NavBar extends React.Component{
     render() {
         const isLoggedIn = (this.state.token != null) ? true : false
         return(
-            <div>
+            <div className="bg-white">
                 <div class="relative flex justify-center mt-4 pb-4">
                 <p class="absolute left-48 text-3xl font-bold">LITSUB</p>
                     <div class="">
@@ -72,7 +72,7 @@ export default class NavBar extends React.Component{
                                   leaveFrom="transform opacity-100 scale-100"
                                   leaveTo="transform opacity-0 scale-95"
                             >
-                            <Menu.Items class="absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <Menu.Items class="w-40 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                 <Menu.Item>
                                     {({active}) => (
                                     <Link to={{pathname:"/me", state: {token: this.state.token, user: this.state.user}}} class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}> My Account</Link>

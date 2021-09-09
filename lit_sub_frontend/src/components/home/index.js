@@ -187,7 +187,8 @@ export default class Home extends React.Component {
                                         </Link>
                                     </div>
                                     <div class="text-base">{story.synopsis}</div>
-                                    <div class="text-base italic"><Link to={"/author/" + story.author}>{story.author_name}</Link></div>
+                                    <div class="text-base italic"><Link to={{ pathname: "/author/" + story.author,
+                                            state: {token: this.state.token, user: this.state.user}}}>{story.author_name}</Link></div>
                                 </div>
                             </li>
                             ))}
@@ -213,11 +214,12 @@ export default class Home extends React.Component {
                             )
                             }
                             <ul>
-                            <div class="grid grid-cols-4 gap-x-4 gap-y-14 mt-6" >
+                            <div class="grid grid-cols-4 gap-x-4 gap-y-7 mt-6" >
                             {this.state.authors.slice(this.state.author_offset, this.state.author_offset + 12).map(author => (
                             <li key={author.id}>
                                 <div class="flex flex-col w-80">
-                                    <div class="text-2xl font-bold"><Link to={"/author/"+ author.id}>{author.username}</Link></div>
+                                    <div class="text-2xl font-bold"><Link to={{ pathname: "/author/"+ author.id,
+                                            state: {token: this.state.token, user: this.state.user}}}>{author.username}</Link></div>
                                     <div class="text-base italic">{author.bio}</div>
                                 </div>
                             </li>

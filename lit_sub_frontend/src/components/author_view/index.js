@@ -138,7 +138,7 @@ export default class AuthorView extends React.Component {
             <ul>
             {this.state.authors.map(author => (
                 <div class="flex justify-center">
-                <li key={author.id} class="group w-1/2">
+                <li key={author.id} class="group w-1/2 mb-2">
                 <Item>
                     <div class="flex flex-col ml-5 p-4 max-w-xs">
                     <Link class="font-medium text-xl" 
