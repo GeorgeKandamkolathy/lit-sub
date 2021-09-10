@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams } from "react-router";
 import NavBar from "../common/nav-bar";
 import { ThumbUpIcon as ThumbUpIconOutline } from '@heroicons/react/outline';
-import { ThumbUpIcon as ThumbUpIconSolid } from '@heroicons/react/solid';
+import { ArrowDownIcon, ArrowUpIcon, ThumbUpIcon as ThumbUpIconSolid } from '@heroicons/react/solid';
 
 export default class StoryPublic extends React.Component {
     constructor(props) {
@@ -16,11 +16,27 @@ export default class StoryPublic extends React.Component {
             comments: [],
             comment_text: "",
             token: this.props.token,
+            fontSize: 2,
         };
         this.url = "http://127.0.0.1:8000/" 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.onLike = this.onLike.bind(this);
+        this.fontChange = this.fontChange.bind(this);
+    }
+
+    fontChange(event){
+        const target = event.currentTarget;
+        const value = target.value;
+        console.log(this.state.fontSize)
+        if (value == 'small' && this.state.fontSize > 0){
+            this.setState({
+                fontSize: this.state.fontSize - 1
+        });}
+        else if (value == 'large' && this.state.fontSize < 6){
+            this.setState({
+                fontSize: this.state.fontSize + 1
+        });}
     }
 
     onLike(){
@@ -111,7 +127,8 @@ export default class StoryPublic extends React.Component {
 
 
     render(){
-        const {story, error, token, user} = this.state 
+        const {story, error, token, fontSize, user} = this.state 
+        let sizes = ['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 'text-3xl']
         console.log(this.props)
         console.log(story)
         if (error) {
@@ -125,9 +142,11 @@ export default class StoryPublic extends React.Component {
                         <div class="flex justify-center h-screen pb-26 mb-4">
                         <div class="bg-white w-3/4 h-auto mt-14 rounded-lg ">
                         <h1 class="text-center mt-10 text-5xl font-medium">{story.story_title}</h1>
-                        <h3 class="text-center mt-5">{story.author_name}</h3>
-                        <p class="px-20 mt-10">{story.story_text}</p>
+                        <h3 class="text-xl text-center mt-5">{story.author_name}</h3>
+                        <p class={"px-20 mt-10 " + sizes[this.state.fontSize]}>{story.story_text}</p>
                         </div>
+                        <button value="large" onClick={this.fontChange}><ArrowUpIcon className="h-5 w-5"/></button>
+                        <button value="small" onClick={this.fontChange}><ArrowDownIcon className="h-5 w-5"/></button>
                         </div>
 
                         <div class="flex justify-around">

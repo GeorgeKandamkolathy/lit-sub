@@ -1,12 +1,11 @@
 import React from "react"
 import {
     BrowserRouter as Router,
-    Switch,
     Route,
     Link,
     useLocation,
   } from "react-router-dom";
-import { Listbox, Menu, Transition } from '@headlessui/react';
+import { Listbox, Menu, Transition, Switch } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/solid'
 
 export default class NavBar extends React.Component{
@@ -15,9 +14,24 @@ export default class NavBar extends React.Component{
         this.state = {
             user:this.props.user,
             token:this.props.token,
+            darkMode: false,
         }
         this.url = "http://127.0.0.1:8000/" 
-        this.handleLogout = this.handleLogout.bind(this)
+        this.handleLogout = this.handleLogout.bind(this);
+        this.setDarkMode = this.setDarkMode.bind(this);
+    }
+
+    setDarkMode(){
+        if (this.state.darkMode){
+            this.setState({
+                darkMode: false
+            })
+        }
+        else{
+            this.setState({
+                darkMode: true
+            })
+        }
     }
     
     handleLogout(){
@@ -54,7 +68,7 @@ export default class NavBar extends React.Component{
                     <Link to={{pathname: "/story", state: { token: this.state.token, user: this.state.user}}} class="m-16 text-lg hover:text-gray-600">Stories</Link>
                     <Link to={{pathname: "/authors", state: { token: this.state.token, user: this.state.user}}} class="m-8 text-lg hover:text-gray-600">Authors</Link>
                     </div>
-                    <div class="absolute right-48 h-16 w-16">
+                    <div className="absolute right-48 h-16 w-16">
                     {isLoggedIn ? (
                         <Menu>
                             <Menu.Button class="inline-flex justify-center bg-purple-700 pb-2 pt-1 px-4 rounded-full text-white hover:bg-purple-500 hover:text-black">
@@ -96,6 +110,22 @@ export default class NavBar extends React.Component{
                         <Link to="/login" class="bg-purple-700 pb-2 pt-1 px-4 rounded-full text-white hover:bg-purple-600 hover:text-black">Login</Link>
                     )
                     }
+                    </div>
+                    <div className="absolute right-14 top-0">
+                    <Switch
+                        checked={this.state.darkMode}
+                        onChange={this.setDarkMode}
+                        className={`${
+                            this.state.darkMode ? 'bg-white' : 'bg-black'
+                        } relative inline-flex items-center h-8 rounded-full w-14`}
+                        >
+                        <span className="sr-only">Enable notifications</span>
+                        <span
+                            className={`${
+                            this.state.darkMode ? 'translate-x-8 bg-black' : 'translate-x-1 bg-white'
+                            } inline-block w-5 h-5 transform rounded-full`}
+                        />
+                    </Switch>
                     </div>
                 </div>
             </div>
