@@ -18,8 +18,6 @@ export default class NavBar extends React.Component{
             user: this.props.user,
             token: this.props.token,
             searchValue: "",
-            storyResults: [],
-            authorResults: [],
             search: false ,
         }
         this.url = "http://127.0.0.1:8000/" 
@@ -39,14 +37,9 @@ export default class NavBar extends React.Component{
     }
     
     handleSearch(){
-        fetch(this.url+"search/"+this.state.searchValue)
-        .then(res=>res.json())
-        .then((result) =>
         this.setState({
-            storyResults: result['stories'],
-            authorResults: result['authors'],
             search: true,
-        }))
+        })
     }
 
     handleLogout(){
@@ -95,7 +88,7 @@ export default class NavBar extends React.Component{
                             <form onSubmit={this.handleSearch} className="">
                             <div className="group flex">
                             <button onClick={this.handleSearch} type="submit"><SearchIcon className="h-5 w-5"/></button>
-                            <input className="hidden ml-4 border-b-2 drop-shadow-md border-black-700 focus:outline-none focus:block w-60 group-hover:inline" name="searchValue" type="text" value={this.state.searchValue} onChange={this.handleChange} />
+                            <input className="transition-all duration-500 ease-in-out hidden ml-4 border-b-2 drop-shadow-md border-black-700 focus:outline-none focus:block w-60 group-hover:inline" name="searchValue" type="text" value={this.state.searchValue} onChange={this.handleChange} />
                             </div>
                             </form>
                         </div>
