@@ -8,6 +8,7 @@ import {
   } from "react-router-dom";
 import { Listbox, Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/solid'
+import { SearchIcon } from "@heroicons/react/outline";
 
 export default class NavBar extends React.Component{
     constructor(props){
@@ -47,14 +48,17 @@ export default class NavBar extends React.Component{
         return(
             <div className="bg-white">
                 <div class="relative flex justify-center mt-4 pb-4">
-                <Link to={{pathname: "/", state: { token: this.state.token, user: this.state.user}}} class="absolute left-48 font-medium rounded-md px-2 pt-1 pb-2 text-lg hover:text-purple-700">
+                <Link to={{pathname: "/", state: { token: this.state.token, user: this.state.user}}} class="absolute left-48  font-medium rounded-md px-2 pt-1 pb-2 text-lg hover:text-purple-700">
                     <p class="text-3xl font-bold">LITSUB</p>
                 </Link>
-                    <div class="">
+                    <div class=" mt-1">
                     <Link to={{pathname: "/story", state: { token: this.state.token, user: this.state.user}}} class="m-16 text-lg hover:text-gray-600">Stories</Link>
                     <Link to={{pathname: "/authors", state: { token: this.state.token, user: this.state.user}}} class="m-8 text-lg hover:text-gray-600">Authors</Link>
                     </div>
-                    <div class="absolute right-48 h-16 w-16">
+                    <div className="absolute right-60 pt-2">
+                    <SearchIcon className="h-5 w-5"/>
+                    </div>
+                    <div className="absolute right-20 h-16 w-16">
                     {isLoggedIn ? (
                         <Menu>
                             <Menu.Button class="inline-flex justify-center bg-purple-700 pb-2 pt-1 px-4 rounded-full text-white hover:bg-purple-500 hover:text-black">
@@ -73,7 +77,7 @@ export default class NavBar extends React.Component{
                                   leaveFrom="transform opacity-100 scale-100"
                                   leaveTo="transform opacity-0 scale-95"
                             >
-                            <Menu.Items class="w-40 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <Menu.Items class="w-32 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                 <Menu.Item>
                                     {({active}) => (
                                     <Link to={{pathname:"/me", state: {token: this.state.token, user: this.state.user}}} class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}> My Account</Link>
