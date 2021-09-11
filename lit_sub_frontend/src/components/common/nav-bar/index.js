@@ -103,7 +103,7 @@ export default class NavBar extends React.Component{
 
                         {this.state.searchBar ?
                         (
-                        <div onMouseOver={() => this.setState({isShowing:true})} className="group absolute right-60 pt-2">
+                        <div onMouseOver={() => this.setState({isShowing:true})} className="group absolute right-72 pt-2">
                             <form onSubmit={this.handleSearch} className="">
                             <div className="group flex">
                             <button onClick={this.handleSearch} type="submit"><SearchIcon className="h-5 w-5"/></button>
@@ -125,7 +125,7 @@ export default class NavBar extends React.Component{
                         )
                         }
 
-                        <div className="absolute right-32 h-16 w-16">
+                        <div className="absolute right-48 h-16 w-16">
                         {isLoggedIn ? (
                             <Menu>
                                 <Menu.Button class="inline-flex justify-center bg-purple-700 pb-2 pt-1 px-4 rounded-full text-white hover:bg-purple-500 hover:text-black">
@@ -169,7 +169,7 @@ export default class NavBar extends React.Component{
                         }
                         </div>
                     </div>
-                    <div className="absolute right-10 top-3">
+                    <div className="absolute right-10 top-4">
                     <Switch
                         checked={this.state.darkMode}
                         onChange={this.setDarkMode}
