@@ -1,13 +1,12 @@
 import React from "react"
 import {
     BrowserRouter as Router,
-    Switch,
     Route,
     Link,
     useLocation,
     Redirect,
   } from "react-router-dom";
-import { Listbox, Menu, Transition } from '@headlessui/react';
+import { Listbox, Menu, Transition, Switch } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import { SearchIcon } from "@heroicons/react/outline";
 
@@ -15,19 +14,32 @@ export default class NavBar extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            user: this.props.user,
-            token: this.props.token,
+            user:this.props.user,
+            token:this.props.token,
+            darkMode: false,
             searchValue: "",
             search: false ,
             searchBar: (this.props.searchBar != null ?  false : true),
             isShowing: false,
         }
         this.url = "http://127.0.0.1:8000/" 
-        this.handleLogout = this.handleLogout.bind(this)
+        this.handleLogout = this.handleLogout.bind(this);
+        this.setDarkMode = this.setDarkMode.bind(this);
         this.handleSearch = this.handleSearch.bind(this)
         this.handleChange = this.handleChange.bind(this)
     }
 
+    setDarkMode(){
+        if (this.state.darkMode){
+            this.setState({
+                darkMode: false
+            })
+        }
+        else{
+            this.setState({
+                darkMode: true
+            })
+        }
     handleChange(event){
         const target = event.target;
         const value = target.value;
@@ -36,6 +48,7 @@ export default class NavBar extends React.Component{
         this.setState({
             [name]: value
         });
+
     }
     
     handleSearch(){
@@ -153,6 +166,22 @@ export default class NavBar extends React.Component{
                         )
                         }
                         </div>
+                    </div>
+                    <div className="absolute right-14 top-0">
+                    <Switch
+                        checked={this.state.darkMode}
+                        onChange={this.setDarkMode}
+                        className={`${
+                            this.state.darkMode ? 'bg-white' : 'bg-black'
+                        } relative inline-flex items-center h-8 rounded-full w-14`}
+                        >
+                        <span className="sr-only">Enable notifications</span>
+                        <span
+                            className={`${
+                            this.state.darkMode ? 'translate-x-8 bg-black' : 'translate-x-1 bg-white'
+                            } inline-block w-5 h-5 transform rounded-full`}
+                        />
+                    </Switch>
                     </div>
                 </div>
             )
