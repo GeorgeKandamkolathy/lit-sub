@@ -43,10 +43,12 @@ export default class Login extends React.Component {
             this.setState({
                 token: result.key,
                 user: this.state.usernameValue,
+                passwordValue: ""
             })},
             (error) => {
                 this.setState({
                     error: error,
+                    passwordValue: "",
                 })
             }
             )
@@ -72,7 +74,7 @@ export default class Login extends React.Component {
                         <div class="bg-purple-700">
                             <div class="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
                                 <p class="text-white text-base text-center">Unrecognized Login</p>
-                                <XIcon class="absolute top-3 right-5 h-6 w-6 text-white"/>
+                                <XIcon onClick = {() => {this.setState({token:""})}}class="absolute top-3 right-5 h-6 w-6 text-white"/>
                             </div>
                         </div> 
                     ) :(

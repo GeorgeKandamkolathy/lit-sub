@@ -13,6 +13,7 @@ export default class Register extends React.Component {
             usernameValue: "",
             passwordValue: "",
             emailValue: "",
+            registerError: [],
         };
         this.url = "http://127.0.0.1:8000/" 
         this.handleChange = this.handleChange.bind(this)
@@ -42,6 +43,7 @@ export default class Register extends React.Component {
         .then(data => data.json())
         .then((result) => {
             this.setState({
+                registerError: result,
                 token: result.key,
                 user: this.state.usernameValue,
             })},
@@ -54,7 +56,9 @@ export default class Register extends React.Component {
     }
 
     render() {
+        const {registerError} = this.state
         const fail = this.state.token == undefined;
+        console.log(registerError)
         if (this.state.error){
             return <div>Error: {this.state.error.message}</div>;
         }
@@ -83,18 +87,22 @@ export default class Register extends React.Component {
                         <label class="my-7">
                         <p>Email:</p>
                         <input class="rounded border-2 border-black-400 focus:outline-none focus:ring-2 focus:border-purple-300 pl-3 w-96 py-2" name="emailValue" type="text" value={this.state.emailValue} onChange={this.handleChange} />
+                        {"email" in registerError ? <p>{registerError['email'][0]}</p> : <div/>}
                         </label>
                         <label class="my-7">
                         <p>Username:</p>
                         <input class="rounded border-2 border-black-400 focus:outline-none focus:ring-2 focus:border-purple-300 pl-3 w-96 py-2" name="usernameValue" type="text" value={this.state.usernameValue} onChange={this.handleChange} />
+                        {"username" in registerError ? <p>{registerError['username'][0]}</p> : <div/>}
                         </label>
                         <label class="my-7">
                         <p>Password:</p>
                         <input class="rounded border-2 border-black-400 focus:outline-none focus:ring-2 focus:border-purple-300 pl-3 w-96 py-2" name="password1Value" type="password" value={this.state.password1Value} onChange={this.handleChange} />
+                        {"password1" in registerError ? <p>{registerError['password1'][0]}</p> : <div/>}
                         </label>
                         <label class="my-7">
                         <p>Confirm Password:</p>
                         <input class="rounded border-2 border-black-400 focus:outline-none focus:ring-2 focus:border-purple-300 pl-3 w-96 py-2" name="password2Value" type="password" value={this.state.password2Value} onChange={this.handleChange} />
+                        {"non_field_errors" in registerError ? <p>{registerError['non_field_errors'][0]}</p> : <div/>}
                         </label>
                         <input type="submit" value="Create Account" class="rounded mt-5 py-1 bg-purple-700 text-white hover:bg-purple-400 hover:text-black cursor-pointer"/>
                         </div>
