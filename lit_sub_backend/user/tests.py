@@ -25,7 +25,7 @@ class UserTests(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['username'], self.USER)
+        self.assertEqual(response.data['results'][0]['username'], self.USER)
 
     def test_get_specific_author(self):
         self.test_create_user()
