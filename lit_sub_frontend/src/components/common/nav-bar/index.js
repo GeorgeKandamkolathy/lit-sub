@@ -39,7 +39,9 @@ export default class NavBar extends React.Component{
             this.setState({
                 darkMode: true
             })
-        }
+        }       
+    }
+
     handleChange(event){
         const target = event.target;
         const value = target.value;
@@ -187,5 +189,4 @@ export default class NavBar extends React.Component{
             )
         }
     }
-
 }
