@@ -37,8 +37,11 @@ export default class Story extends React.Component {
     }
 
     render(){
-        const {user, token, story_id} = this.state
-        if (this.state.is_authenticated) {
+        const {user, token, story_id, isLoaded} = this.state
+        if(!isLoaded){
+            return <p>Loading</p>;    
+        }
+        else if (this.state.is_authenticated) {
             return (
                 <StoryEdit user={user} token={token} story_id={story_id}/>
             );
