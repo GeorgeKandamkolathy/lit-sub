@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'user.apps.UserConfig',
     'story.apps.StoryConfig',
+    'search.apps.SearchConfig',
 ]
 
 SITE_ID = 1

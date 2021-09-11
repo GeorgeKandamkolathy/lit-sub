@@ -19,7 +19,10 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      display: ['group-focus, group-hover, focus'],
+      backgroundColor: ['group-focus'],
+    },
   },
   plugins: [],
 }
