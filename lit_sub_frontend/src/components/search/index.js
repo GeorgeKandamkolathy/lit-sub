@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import NavBar from "../common/nav-bar";
-import { Listbox, Transition, RadioGroup} from '@headlessui/react';
+import { Listbox, Transition, RadioGroup, Tab} from '@headlessui/react';
 import { ThumbUpIcon, ChevronDownIcon, ChevronUpIcon, SearchIcon } from '@heroicons/react/outline';
 import Item from '../common/item';
 
@@ -70,7 +70,7 @@ export default class Search extends React.Component {
         const {user, token, storyResults, authorResults, error, selectedTime, selectedOrder} = this.state
         return(
             <div>
-            <NavBar user={user} token={token} />
+            <NavBar user={user} token={token} searchBar={false}/>
             <div class="bg-blue-50 min-h-screen h-full pt-7">
             <div class="relative">
             <div className="flex justify-center">
@@ -108,7 +108,7 @@ export default class Search extends React.Component {
                         {({active}) => (
                         <p 
                             onClick={this.changeOrder}
-                            class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} 
+                            className={`${ active ? "bg-purple-700 text-white": "text-gray-900"} 
                             group flex rounded-md items-center w-full px-2 py-2 text-sm cursor-pointer`}>
                         Top
                         </p>
@@ -181,30 +181,73 @@ export default class Search extends React.Component {
                 </RadioGroup>
             </div>
             </div>
-            <div>
-            <ul>
-            {this.state.storyResults.map(story => (
-                <div class="flex justify-center">
-                <li key={story.id} class="group w-1/2 mb-2">
-                <Item>
-                    <div class="flex flex-col ml-5 p-4 max-w-xs">
-                    <Link class="font-medium text-xl" 
-                        to={{ pathname: "/story/" + story.id,
-                            state: {token: this.state.token, user: this.state.user}}}>
-                    {story.story_title}
-                    </Link>
-                    <div class="flex ml-2">
-                    <Link class="font-bold ml-4 w-auto" to={"author/"+story.author}>{story.author_name}</Link>
-                    <ThumbUpIcon class="w-4 h-4 mt-1 ml-4" />
-                    <p class="ml-1">{story.likes}</p>
-                    </div>
-                    </div>
-                    <p class="mt-10 italic">{story.synopsis}</p>
-                </Item>
-                </li>  
+            <div>                
+                <Tab.Group>
+                <div className="flex justify-center mb-4">
+                <Tab.List>
+                    <Tab
+                    className={({ selected }) => 
+                        (selected ? 'bg-blue-500 text-white ' : 'bg-purple-200 text-black ') +
+                        ('rounded mr-4 p-3')
+                    }
+                    >
+                    Stories
+                    </Tab>
+                    <Tab className={({ selected }) => 
+                        (selected ? 'bg-blue-500 text-white ' : 'bg-purple-200 text-black ') +
+                        ('rounded mr-4 p-3')
+                    }>
+                    Authors
+                    </Tab>
+                </Tab.List>
                 </div>
-            ))}
-            </ul>
+                <Tab.Panels>
+                    <Tab.Panel>
+                    <ul>
+                    {this.state.storyResults.map(story => (
+                        <div class="flex justify-center">
+                        <li key={story.id} class="group w-1/2 mb-2">
+                        <Item>
+                            <div class="flex flex-col ml-5 p-4 max-w-xs">
+                            <Link class="font-medium text-xl" 
+                                to={{ pathname: "/story/" + story.id,
+                                    state: {token: this.state.token, user: this.state.user}}}>
+                            {story.story_title}
+                            </Link>
+                            <div class="flex ml-2">
+                            <Link class="font-bold ml-4 w-auto" to={"author/"+story.author}>{story.author_name}</Link>
+                            <ThumbUpIcon class="w-4 h-4 mt-1 ml-4" />
+                            <p class="ml-1">{story.likes}</p>
+                            </div>
+                            </div>
+                            <p class="mt-10 italic">{story.synopsis}</p>
+                        </Item>
+                        </li>  
+                        </div>
+                    ))}
+                    </ul>
+                    </Tab.Panel>
+                    <Tab.Panel>
+                    <ul>
+                    {this.state.authorResults.map(author => (
+                        <div class="flex justify-center">
+                        <li key={author.id} class="group w-1/2 mb-2">
+                        <Item>
+                            <div class="flex flex-col ml-5 p-4 max-w-xs">
+                            <Link class="font-medium text-xl" 
+                                to={{ pathname: "/author/" + author.id,
+                                    state: {token: this.state.token, user: this.state.user}}}>
+                            {author.username}
+                            </Link>
+                            </div>
+                        </Item>
+                        </li>  
+                        </div>
+                    ))}
+                    </ul>
+                    </Tab.Panel>
+                </Tab.Panels>
+                </Tab.Group>
             </div>
             </div>
             </div>

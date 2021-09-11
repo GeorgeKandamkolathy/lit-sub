@@ -19,6 +19,8 @@ export default class NavBar extends React.Component{
             token: this.props.token,
             searchValue: "",
             search: false ,
+            searchBar: (this.props.searchBar != null ?  false : true),
+            isShowing: false,
         }
         this.url = "http://127.0.0.1:8000/" 
         this.handleLogout = this.handleLogout.bind(this)
@@ -84,14 +86,29 @@ export default class NavBar extends React.Component{
                         <Link to={{pathname: "/authors", state: { token: this.state.token, user: this.state.user}}} class="m-8 text-lg hover:text-gray-600">Authors</Link>
                         </div>
 
-                        <div className="group absolute right-60 pt-2">
+                        {this.state.searchBar ?
+                        (
+                        <div onMouseOver={() => this.setState({isShowing:true})} className="group absolute right-60 pt-2">
                             <form onSubmit={this.handleSearch} className="">
                             <div className="group flex">
                             <button onClick={this.handleSearch} type="submit"><SearchIcon className="h-5 w-5"/></button>
-                            <input className="transition-all duration-500 ease-in-out hidden ml-4 border-b-2 drop-shadow-md border-black-700 focus:outline-none focus:block w-60 group-hover:inline" name="searchValue" type="text" value={this.state.searchValue} onChange={this.handleChange} />
+                            <Transition show={this.state.isShowing}                                     
+                                    enter="transition ease-out duration-300"
+                                    enterFrom="transform opacity-0 scale-95"
+                                    enterTo="transform opacity-100 scale-100"
+                                    leave="transition ease-in duration-75"
+                                    leaveFrom="transform opacity-100 scale-100"
+                                    leaveTo="transform opacity-0 scale-95" 
+                                    className="font-bold">
+                            <input onBlur={() => this.setState({isShowing:false})} autoFocus className="ml-4 border-b-2 drop-shadow-md border-black-700 focus:outline-none focus:block w-60" name="searchValue" type="text" value={this.state.searchValue} onChange={this.handleChange} />
+                            </Transition>
                             </div>
                             </form>
                         </div>
+                        ):(
+                        <div/>
+                        )
+                        }
 
                         <div className="absolute right-20 h-16 w-16">
                         {isLoggedIn ? (
