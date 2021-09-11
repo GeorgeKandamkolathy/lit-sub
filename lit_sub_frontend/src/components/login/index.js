@@ -95,7 +95,7 @@ export default class Login extends React.Component {
                         </label>
                         <input type="submit" value="Sign in" class="rounded py-1 bg-purple-700 text-white hover:bg-purple-400 hover:text-black cursor-pointer"/>
                         </div>
-                        <p>Don't have an account?</p> <Link to="/register">Register</Link>
+                        <p>Don't have an account?</p> <Link to="/register" className="text-purple-700 hover:underline">Register</Link>
                     </form>
                     </div>
                 </div>

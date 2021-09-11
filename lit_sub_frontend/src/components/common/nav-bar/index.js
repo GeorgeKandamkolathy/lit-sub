@@ -93,7 +93,7 @@ export default class NavBar extends React.Component{
             return(
                 <div className="bg-white">
                     <div class="relative flex justify-center mt-4 pb-4">
-                    <Link to={{pathname: "/", state: { token: this.state.token, user: this.state.user}}} class="absolute left-48  font-medium rounded-md px-2 pt-1 pb-2 text-lg hover:text-purple-700">
+                    <Link to={{pathname: "/", state: { token: this.state.token, user: this.state.user}}} class="absolute left-48 font-medium rounded-md px-2 pb-2 text-lg hover:text-purple-700">
                         <p class="text-3xl font-bold">LITSUB</p>
                     </Link>
                         <div class=" mt-1">
