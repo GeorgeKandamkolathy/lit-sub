@@ -125,7 +125,7 @@ export default class NavBar extends React.Component{
                         )
                         }
 
-                        <div className="absolute right-20 h-16 w-16">
+                        <div className="absolute right-32 h-16 w-16">
                         {isLoggedIn ? (
                             <Menu>
                                 <Menu.Button class="inline-flex justify-center bg-purple-700 pb-2 pt-1 px-4 rounded-full text-white hover:bg-purple-500 hover:text-black">
@@ -169,7 +169,7 @@ export default class NavBar extends React.Component{
                         }
                         </div>
                     </div>
-                    <div className="absolute right-14 top-0">
+                    <div className="absolute right-10 top-3">
                     <Switch
                         checked={this.state.darkMode}
                         onChange={this.setDarkMode}
