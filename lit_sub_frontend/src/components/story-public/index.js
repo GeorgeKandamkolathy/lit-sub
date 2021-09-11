@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from "react-router";
 import NavBar from "../common/nav-bar";
-import { ThumbUpIcon as ThumbUpIconOutline } from '@heroicons/react/outline';
+import { AnnotationIcon, ThumbUpIcon as ThumbUpIconOutline } from '@heroicons/react/outline';
 import { ArrowDownIcon, ArrowUpIcon, ThumbUpIcon as ThumbUpIconSolid } from '@heroicons/react/solid';
 
 export default class StoryPublic extends React.Component {
@@ -140,13 +140,21 @@ export default class StoryPublic extends React.Component {
                     <NavBar user={user} token={token}/>
                     <div class="flex flex-col bg-purple-50 h-auto">
                         <div class="flex justify-center h-screen pb-26 mb-4">
-                        <div class="bg-white w-3/4 h-auto mt-14 rounded-lg ">
+                        <div class="bg-white w-3/4 h-auto mt-14 rounded-lg mr-10">
                         <h1 class="text-center mt-10 text-5xl font-medium">{story.story_title}</h1>
                         <h3 class="text-xl text-center mt-5">{story.author_name}</h3>
                         <p class={"px-20 mt-10 " + sizes[this.state.fontSize]}>{story.story_text}</p>
                         </div>
-                        <button value="large" onClick={this.fontChange}><ArrowUpIcon className="h-5 w-5"/></button>
-                        <button value="small" onClick={this.fontChange}><ArrowDownIcon className="h-5 w-5"/></button>
+                        <div className="sticky top-40 flex flex-col rounded-md bg-white h-32 w-32">
+                            <div className="flex justify-center mb-5 pt-5">
+                                <button value="large" onClick={this.fontChange} className="sticky top-1/4"><ArrowUpIcon className="h-5 w-5"/></button>
+                                <button value="small" onClick={this.fontChange} className="sticky top-1/4"><ArrowDownIcon className="h-5 w-5"/></button>
+                            </div>
+                            <div className="flex justify-around pt-9 w-auto">
+                            <p className="flex"><ThumbUpIconOutline className="h-5 w-5"/>{story.likes}</p>
+                            <p className="flex"><AnnotationIcon className="h-5 w-5"/>{this.state.comments.length}</p>
+                            </div>
+                        </div>
                         </div>
 
                         <div class="flex justify-around">
