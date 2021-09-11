@@ -24,7 +24,7 @@ export default class MyAccount extends React.Component {
     }
 
     onDelete(event){
-        fetch(this.url+'story/' + event.target.id+ '/',{
+        fetch(this.url+'story/' + event.currentTarget.id+ '/',{
             method: "DELETE",
             mode: 'cors',
             headers: {

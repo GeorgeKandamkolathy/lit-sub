@@ -72,6 +72,7 @@ export default class Register extends React.Component {
         }
         else{
             return(
+                <div>
                 <div class="flex">
                     <div class="flex flex-col items-center justify-center h-3/4 w-1/2">
                         <h2 class="ml-10 mb-7 text-3xl text-purple-600 font-bold">LITSUB</h2>
@@ -106,9 +107,13 @@ export default class Register extends React.Component {
                         </label>
                         <input type="submit" value="Create Account" class="rounded mt-5 py-1 bg-purple-700 text-white hover:bg-purple-400 hover:text-black cursor-pointer"/>
                         </div>
-                        <p>Already have an account?</p> <Link to="/login">Login</Link>
+                        <p>Already have an account?</p> <Link to="/login" className="text-purple-700 hover:underline">Login</Link>
                     </form>
                     </div>
+                </div>
+                <div className="h-20 w-full">
+
+                </div>
                 </div>
             );
         }
