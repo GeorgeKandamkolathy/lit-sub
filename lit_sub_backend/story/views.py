@@ -1,5 +1,6 @@
 from rest_framework import pagination
 from .models import Comment, Story, Like
+from tag.models import Tag
 from .serializers import StorySerializer, CommentSerializer
 from django.http import Http404
 from rest_framework.views import APIView
@@ -45,7 +46,7 @@ class all_view(APIView):
         return paginator.get_paginated_response(serializer.data)
 
 class submit_view(APIView):
-    
+
     permission_classes=[TokenAuthentication]
 
     def post(self, request):
@@ -192,3 +193,18 @@ class group_return(APIView):
             serializer = CommentSerializer(result_page, many=True, context={'request':request})
             
             return paginator.get_paginated_response(serializer.data)    
+
+class tag_return_view(APIView):
+
+    pagination_class = LimitOffsetPagination
+
+    def get(self, request, tag):
+        tag = Tag.objects.get(tag_name=tag)
+
+        stories = tag.story_set.all()
+        paginator = self.pagination_class()
+        result_page = paginator.paginate_queryset(stories, request)
+        
+        serializer = StorySerializer(result_page, many=True, context={'request':request})
+
+        return paginator.get_paginated_response(serializer.data) 
