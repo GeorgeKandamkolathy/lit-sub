@@ -2,12 +2,14 @@ from django.db.models.deletion import CASCADE
 from django.db import models
 from django.db.models.fields import TextField, CharField, IntegerField
 from user.models import User
+from tag.models import Tag
 
 class Story(models.Model):
     story_text = TextField()
     story_title = CharField(max_length=100)
     synopsis = CharField(max_length=500, default="")
     author = models.ForeignKey(User, on_delete=CASCADE, default=None)
+    tags = models.ManyToManyField(Tag, blank=True)
     author_name = CharField(max_length=100, default="Anonymous")
     likes = IntegerField(blank=True, default=0)
 
