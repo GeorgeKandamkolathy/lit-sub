@@ -1,90 +1,107 @@
 import React from 'react';
-import { Link } from "react-router-dom";
-import NavBar from "../common/nav-bar";
-import { Listbox, Transition, RadioGroup} from '@headlessui/react';
-import { ThumbUpIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline';
-import Item from '../common/item';
-import OrderList from '../common/order-list';
+import NavBar from '../components/common/nav-bar';
 
-export default class StoryView extends React.Component {
+export default class Story extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            error: null,
-            isLoaded: false,
             user: (this.props.location.state == undefined ? null : this.props.location.state.user),
-            stories: [],
             token: (this.props.location.state == undefined ? null : this.props.location.state.token),
-            selectedOrder: "top",
-            selectedTime: "7 Days",
+            tag: this.props.match.params.tag,
+            stories: [],
         };
         this.url = "http://127.0.0.1:8000/" 
-        this.componentDidMount = this.componentDidMount.bind(this)
-        this.onOrderChange = this.onOrderChange.bind(this)
     }
 
-    onOrderChange(value){
-        this.setState({
-            selectedOrder: value
-        }, () => fetch(this.url + "story/sort/"+ this.state.selectedOrder +"/?limit=100&offset=0")
-        .then(res => res.json())
-        .then((result) =>
-            this.setState({
-                isLoaded: true,
-                stories: result.results,
-            }),
-            (error) =>
-            this.setState({
-                isLoaded: true,
-                error,
-            })
-        ))
-    }
-
+    
     componentDidMount(){
-        fetch(this.url + "story/sort/top/?limit=100&offset=0")
+        fetch(this.url + "story/tag" + this.state.tag + "/")
         .then(res => res.json())
-        .then((result) =>
-            this.setState({
-                isLoaded: true,
-                stories: result.results,
-            }),
-            (error) =>
-            this.setState({
-                isLoaded: true,
-                error,
-            })
+        .then(
+            (result) => {
+                this.setState({
+                    isLoaded: true,
+                    stories: result,
+                });
+            },
+            (error) => {
+                this.setState({
+                  isLoaded: true,
+                  error: error,
+                });
+            }
         )
     }
-    
-/*    shouldComponentUpdate(){
-        fetch(this.url + "story/sort/"+ this.state.selectedOrder +"/?limit=100&offset=0")
-        .then(res => res.json())
-        .then((result) =>
-            this.setState({
-                isLoaded: true,
-                stories: result.results,
-            }),
-            (error) =>
-            this.setState({
-                isLoaded: true,
-                error,
-            })
-        )    
-    }
-*/
+
     render(){
-        const {user, token, stories, error, selectedTime, selectedOrder} = this.state
+        const {user, token} = this.state
         return(
             <div>
-            <NavBar user={user} token={token}/>
-            <div class="bg-blue-50 h-full pt-7">
+                <NavBar user={user} token={token}/>
+                <div class="bg-blue-50 h-full pt-7">
             <div class="relative">
             <h2 class="text-3xl mb-14 text-center">
-                All Stories
+
             </h2>
             <div class="absolute text-center left-27% top-12">
-                <OrderList onOrderChange={this.onOrderChange}/>
+            <Listbox value={selectedOrder} onChange={this.onChange}>
+                <Listbox.Button class="inline-flex text-xl bg-gray-100 rounded-full w-auto pb-1 px-3 hover:bg-gray-300">
+                    {selectedOrder}
+                    <ChevronDownIcon
+                        className="w-4 h-4 ml-2 mt-2 -mr-1 text-violet-200 hover:text-violet-100"
+                        aria-hidden="true"
+                    />
+                </Listbox.Button>
+                <Transition
+                                  as={React.Fragment}
+                                  enter="transition ease-out duration-100"
+                                  enterFrom="transform opacity-0 scale-95"
+                                  enterTo="transform opacity-100 scale-100"
+                                  leave="transition ease-in duration-75"
+                                  leaveFrom="transform opacity-100 scale-100"
+                                  leaveTo="transform opacity-0 scale-95"
+                >
+                <Listbox.Options class="absolute left-1 w-20 mt-2 text-center bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Listbox.Option
+                        key={1}
+                        value={"top"}
+                    >
+                        {({active}) => (
+                        <p 
+                            onClick={this.changeOrder}
+                            class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} 
+                            group flex rounded-md items-center w-full px-2 py-2 text-sm cursor-pointer`}>
+                        Top
+                        </p>
+                        )}
+                    </Listbox.Option>
+                    <Listbox.Option
+                        key={2}
+                        value={"new"}
+                    >
+                        {({active}) => (
+                        <p 
+                            class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} 
+                            group flex rounded-md items-center w-full px-1 py-2 text-sm cursor-pointer`}>
+                        New
+                        </p>
+                        )}
+                    </Listbox.Option>
+                    <Listbox.Option
+                        key={3}
+                        value={"all"}
+                    >
+                        {({active}) => (
+                        <p 
+                            class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} 
+                            group flex rounded-md items-center w-full px-1 py-2 text-sm cursor-pointer`}>
+                        All
+                        </p>
+                        )}
+                    </Listbox.Option>
+                </Listbox.Options>
+                </Transition>
+            </Listbox>
             </div>
             <div class="absolute top-14 right-1/4">
                 <RadioGroup value={selectedTime} onChange={(value) => {this.setState({selectedTime:value})}}>
@@ -150,9 +167,8 @@ export default class StoryView extends React.Component {
             ))}
             </ul>
             </div>
+            </div>                
             </div>
-            </div>
-           
-        );
+        )
     }
 }
