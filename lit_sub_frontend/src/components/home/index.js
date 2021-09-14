@@ -252,36 +252,40 @@ export default class Home extends React.Component {
 
 
 
-                    <div class="bg-pink-600 bg-opacity-25 mt-16 shadow-lg h-auto">
+                    <div class="bg-pink-600 bg-opacity-25 mt-16 shadow-lg">
                         <div class="relative flex flex-row min-h-72 h-auto pb-3 pl-10 gap-20">
-                        <div>
-                        <h3 class="text-pink-600 font-bold text-4xl w-12 mt-24 mr-8">Popular Authors</h3>
-                        </div>
-                            {this.state.author_offset != 0 ?
+                            <div>
+                            <h3 class="text-pink-600 font-bold text-4xl w-12 mt-24 mr-5">Popular Tags</h3>
+                            </div>
+                            {this.state.story_offset != 0 ?
                             (
-                                <div id="author_prev" className="flex flex-col justify-center">
-                                <ArrowLeftIcon id="author_prev" onClick={this.onClick} class="transform h-5 w-5 hover:scale-150 hover:text-blue-700 cursor-pointer"/>
-                                </div>
+                            <div id="story_prev" className="flex flex-col justify-center">
+                            <ArrowLeftIcon id="story_prev" onClick={this.onClick} class="transform h-5 w-5 hover:scale-150 hover:text-blue-700 cursor-pointer"/>
+                            </div>
                             ) : (
                                 <div/>
                             )
                             }
                             <ul>
-                            <div class="grid grid-cols-4 gap-x-4 gap-y-7 mt-6" >
-                            {this.state.tags.map(tag => (
-                            <li key={tag.id}>
-                                <div class="flex flex-col w-70">
-                                    <div class="text-2xl font-bold"><Link to={{ pathname: "/author/"+ tag.id,
-                                            state: {token: this.state.token, user: this.state.user}}}>{tag.tag_name}</Link></div>
+                            <div class="grid grid-cols-3 gap-x-4 mt-6 -ml-10" >
+                            {this.state.tags.slice(this.state.story_offset, this.state.story_offset + 6).map(tag => (
+                            <li key={tag.id} className="min-h-24">
+                                <div class="flex flex-col w-96">
+                                    <div class="text-2xl font-bold hover:text-gray-600">
+                                        <Link to={{ pathname: "/tag/" + tag.id,
+                                            state: {token: this.state.token, user: this.state.user}}}>
+                                        {tag.tag_name}
+                                        </Link>
+                                    </div>
                                 </div>
                             </li>
                             ))}
                             </div>
                             </ul>   
-                            <div id="author_next" className="flex flex-col justify-center">
-                            <ArrowRightIcon id="author_next" onClick={this.onClick} class="transform h-5 w-5 hover:scale-150 hover:text-blue-700 cursor-pointer -ml-20"/>
+                            <div id="story_next" className="flex flex-col justify-center -ml-5">
+                            <ArrowRightIcon id="story_next" onClick={this.onClick} class="transform h-5 w-5 hover:scale-150 hover:text-blue-700 cursor-pointer -ml-10"/>
                             </div>
-                            </div>
+                        </div>
                     </div>
 
 
