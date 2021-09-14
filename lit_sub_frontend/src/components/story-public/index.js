@@ -48,7 +48,12 @@ export default class StoryPublic extends React.Component {
                 'Authorization': 'Token ' + this.state.token,
             }
         })
-        .then(res => res.json())
+        .then((res) => {
+            if (res.status == 200){
+                return res.json()
+            }
+            throw res
+        })
         .then(
             (result) => {
                 this.setState({
@@ -56,6 +61,10 @@ export default class StoryPublic extends React.Component {
                 })
             }
         )
+        .catch((error) => {
+            this.setState({
+            })
+        })
     }
 
     handleChange(event){
