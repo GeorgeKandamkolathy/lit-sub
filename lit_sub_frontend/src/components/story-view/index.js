@@ -5,6 +5,7 @@ import { Listbox, Transition, RadioGroup} from '@headlessui/react';
 import { ThumbUpIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline';
 import Item from '../common/item';
 import OrderList from '../common/order-list';
+import DateRadio from '../common/date-radio';
 
 export default class StoryView extends React.Component {
     constructor(props) {
@@ -57,22 +58,6 @@ export default class StoryView extends React.Component {
         )
     }
     
-/*    shouldComponentUpdate(){
-        fetch(this.url + "story/sort/"+ this.state.selectedOrder +"/?limit=100&offset=0")
-        .then(res => res.json())
-        .then((result) =>
-            this.setState({
-                isLoaded: true,
-                stories: result.results,
-            }),
-            (error) =>
-            this.setState({
-                isLoaded: true,
-                error,
-            })
-        )    
-    }
-*/
     render(){
         const {user, token, stories, error, selectedTime, selectedOrder} = this.state
         return(
@@ -87,42 +72,7 @@ export default class StoryView extends React.Component {
                 <OrderList onOrderChange={this.onOrderChange}/>
             </div>
             <div class="absolute top-14 right-1/4">
-                <RadioGroup value={selectedTime} onChange={(value) => {this.setState({selectedTime:value})}}>
-                    <RadioGroup.Label class="sr-only">Time</RadioGroup.Label>
-                    <div class="flex">
-                    <RadioGroup.Option value="7 Days" class="mr-3">
-                    {({ checked }) => (
-                        <div className="flex flex-col items-center">
-                        <span className={checked ? 'underline text-blue-700' : ''}>7 Days</span>
-                        <ChevronUpIcon className={checked ? 'h-5 w-5 -mt-1' : 'h-3 w-3 hidden'}/>
-                        </div>  
-                    )}</RadioGroup.Option>
-                    <RadioGroup.Option value="30 Days" class="mr-3">
-                    {({ checked }) => (
-                        <div className="flex flex-col items-center">
-                        <span className={checked ? 'underline text-blue-700' : ''}>30 Days</span>
-                        <ChevronUpIcon className={checked ? 'h-5 w-5 -mt-1' : 'h-3 w-3 hidden'}/>
-                        </div>
-                    )}
-                    </RadioGroup.Option>
-                    <RadioGroup.Option value="Year" class="mr-3">                    
-                    {({ checked }) => (
-                        <div className="flex flex-col items-center">
-                        <span className={checked ? 'underline text-blue-700' : ''}>Year</span>
-                        <ChevronUpIcon className={checked ? 'h-5 w-5 -mt-1' : 'h-3 w-3 hidden'}/>
-                        </div>
-                    )}
-                    </RadioGroup.Option>
-                    <RadioGroup.Option value="All Time" class="mr-3">
-                    {({ checked }) => (
-                        <div className="flex flex-col items-center">
-                        <span className={checked ? 'underline text-blue-700' : ''}>All Time</span>
-                        <ChevronUpIcon className={checked ? 'h-5 w-5 -mt-1' : 'h-3 w-3 hidden'}/>
-                        </div>
-                    )}
-                    </RadioGroup.Option>
-                    </div>
-                </RadioGroup>
+                <DateRadio/>
             </div>
             </div>
             <div>
