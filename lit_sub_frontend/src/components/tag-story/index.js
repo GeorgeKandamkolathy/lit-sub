@@ -1,11 +1,10 @@
-import { RadioGroup } from '@headlessui/react';
 import React from 'react';
 import Item from '../common/item';
 import NavBar from '../common/nav-bar';
 import OrderList from '../common/order-list';
 import DateRadio from '../common/date-radio';
 import { Link } from 'react-router-dom';
-import { ThumbUpIcon } from '@heroicons/react/solid';
+import { ThumbUpIcon } from '@heroicons/react/outline';
 
 export default class TagStory extends React.Component {
     constructor(props) {
@@ -22,13 +21,13 @@ export default class TagStory extends React.Component {
 
     
     componentDidMount(){
-        fetch(this.url + "story/tag" + this.state.tag + "/")
+        fetch(this.url + "story/tag/" + this.state.tag + "/")
         .then(res => res.json())
         .then(
             (result) => {
                 this.setState({
                     isLoaded: true,
-                    stories: result,
+                    stories: result.results,
                 });
             },
             (error) => {
@@ -48,7 +47,7 @@ export default class TagStory extends React.Component {
                 <div class="bg-blue-50 h-full pt-7">
             <div class="relative">
             <h2 class="text-3xl mb-14 text-center">
-                Tags
+                {this.state.tag}
             </h2>
             <div class="absolute text-center left-27% top-12">
                 <OrderList onOrderChange={(value) => {this.setState({selectedOrder:value})}}/>

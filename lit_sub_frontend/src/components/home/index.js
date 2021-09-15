@@ -272,7 +272,7 @@ export default class Home extends React.Component {
                             <li key={tag.id} className="min-h-24">
                                 <div class="flex flex-col w-96">
                                     <div class="text-2xl font-bold hover:text-gray-600">
-                                        <Link to={{ pathname: "/tag/" + tag.id,
+                                        <Link to={{ pathname: "/tag/" + tag.tag_name,
                                             state: {token: this.state.token, user: this.state.user}}}>
                                         {tag.tag_name}
                                         </Link>
