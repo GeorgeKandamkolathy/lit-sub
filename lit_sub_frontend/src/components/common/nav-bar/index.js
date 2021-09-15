@@ -97,8 +97,9 @@ export default class NavBar extends React.Component{
                         <p class="text-3xl font-bold">LITSUB</p>
                     </Link>
                         <div class=" mt-1">
-                        <Link to={{pathname: "/story", state: { token: this.state.token, user: this.state.user}}} class="m-16 text-lg hover:text-gray-600">Stories</Link>
-                        <Link to={{pathname: "/authors", state: { token: this.state.token, user: this.state.user}}} class="m-8 text-lg hover:text-gray-600">Authors</Link>
+                        <Link to={{pathname: "/story", state: { token: this.state.token, user: this.state.user}}} class="m-12 text-lg hover:text-gray-600">Stories</Link>
+                        <Link to={{pathname: "/authors", state: { token: this.state.token, user: this.state.user}}} class="m-12 text-lg hover:text-gray-600">Authors</Link>
+                        <Link to={{pathname: "/tags", state: { token: this.state.token, user: this.state.user}}} class="m-12 text-lg hover:text-gray-600">Tags</Link>
                         </div>
 
                         {this.state.searchBar ?
@@ -147,17 +148,26 @@ export default class NavBar extends React.Component{
                                 <Menu.Items class="w-32 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                     <Menu.Item>
                                         {({active}) => (
-                                        <Link to={{pathname:"/me", state: {token: this.state.token, user: this.state.user}}} class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}> My Account</Link>
+                                        <Link to={{pathname:"/me", state: {token: this.state.token, user: this.state.user}}} 
+                                            class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}>
+                                                My Account
+                                        </Link>
                                         )}
                                     </Menu.Item>
                                     <Menu.Item>
                                         {({active}) => (
-                                        <Link to={{pathname:"/", state: {token: null, user: null}}} onClick={this.handleLogout} class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}> Logout</Link>
+                                        <Link to={{pathname:"/", state: {token: null, user: null}}} onClick={this.handleLogout} 
+                                            class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}> 
+                                                Logout
+                                        </Link>
                                         )}
                                     </Menu.Item>
                                     <Menu.Item>
                                         {({active}) => (
-                                        <Link to={{pathname: "/submit", state:{token: this.state.token, user: this.state.user}}} class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}>Submit</Link>
+                                        <Link to={{pathname: "/submit", state:{token: this.state.token, user: this.state.user}}} 
+                                            class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}>
+                                                Submit
+                                        </Link>
                                         )}
                                     </Menu.Item>
                                 </Menu.Items>

@@ -219,7 +219,7 @@ export default class Home extends React.Component {
                     <div class="bg-blue-600 bg-opacity-25 mt-16 shadow-lg h-auto">
                         <div class="relative flex flex-row min-h-72 h-auto pb-3 pl-10 gap-20">
                         <div>
-                        <h3 class="text-blue-600 font-bold text-4xl w-12 mt-24 mr-8">Popular Authors</h3>
+                        <h3 class="text-blue-600 font-bold text-4xl w-12 mt-24 mr-5">Popular Authors</h3>
                         </div>
                             {this.state.author_offset != 0 ?
                             (

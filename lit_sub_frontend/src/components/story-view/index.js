@@ -63,7 +63,7 @@ export default class StoryView extends React.Component {
         return(
             <div>
             <NavBar user={user} token={token}/>
-            <div class="bg-blue-50 h-full pt-7">
+            <div class="bg-blue-50 min-h-screen h-full pt-7">
             <div class="relative">
             <h2 class="text-3xl mb-14 text-center">
                 All Stories

@@ -18,6 +18,7 @@ import AuthorView from './components/author_view';
 import Author from './components/author';
 import StoryEdit from './components/story-edit';
 import TagStory from './components/tag-story';
+import TagView from './components/all-tags';
 import {v4 as uuid} from 'uuid';
 import Search from './components/search';
 
@@ -25,6 +26,7 @@ ReactDOM.render(
   <BrowserRouter>
         <Route exact path="/author/:author_id" render={(props) => <Author {...props}/>}/>
         <Route exact path="/tag/:tag_name" render={(props) => <TagStory {...props}/>}/>
+        <Route exact path="/tags" render={(props) => <TagView {...props}/>}/>
         <Route exact path="/" render={(props) => <Home {...props} key={uuid()}/>} />
         <Route exact path="/search" render={(props) => <Search {...props}/>}/>
         <Route exact path="/authors" render={(props) => <AuthorView {...props}/>}/>
