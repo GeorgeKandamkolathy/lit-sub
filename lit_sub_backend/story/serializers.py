@@ -8,10 +8,13 @@ class StorySerializer(serializers.ModelSerializer):
         fields = ['id', 'story_text', 'story_title', 'synopsis', 'author', 'author_name', 'likes', 'tags']
 
     def create(self, validated_data):
-        tags = validated_data.pop('tags')
-        story = Story.objects.create(**validated_data)
-        for x in tags:
-            story.tags.add(x.id)
+        if 'tags' in validated_data:
+            tags = validated_data.pop('tags')
+            story = Story.objects.create(**validated_data)
+            for x in tags:
+                story.tags.add(x.id)
+        else:
+            story = Story.objects.create(**validated_data)
         return story
 
 class CommentSerializer(serializers.ModelSerializer):

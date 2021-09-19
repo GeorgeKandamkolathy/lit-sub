@@ -40,8 +40,13 @@ class all_tag_view(APIView):
         serializer = TagSerializer(data=data)
 
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            if not Tag.objects.filter(tag_name=request.data['tag_name']).exists(): 
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else: 
+                tag = Tag.objects.get(tag_name=request.data['tag_name'])
+                serializer = TagSerializer(tag)
+                return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 
 class add_tag_view(APIView):

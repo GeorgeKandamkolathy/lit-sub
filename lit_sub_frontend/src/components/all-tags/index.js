@@ -35,34 +35,26 @@ export default class TagView extends React.Component {
     }
     
     render(){
-        const {user, token, stories, error, selectedTime, selectedOrder} = this.state
+        const {user, token} = this.state
         return(
             <div>
             <NavBar user={user} token={token}/>
             <div class="bg-blue-50 min-h-screen h-full pt-7">
-            <div class="relative">
             <h2 class="text-3xl mb-14 text-center">
                 All Tags
             </h2>
-            </div>
-            <div>
-            <ul>
+            <div class="flex flex-col">
+            <div className="w-1/2 self-center bg-white p-2 rounded-md">
+            <div class="flex justify-start">
             {this.state.tags.map(tag => (
-                <div class="flex justify-center">
-                <li key={tag.id} class="group w-1/2 mb-2">
-                <Item>
-                    <div class="flex flex-col ml-5 p-4 max-w-xs">
                     <Link class="font-medium text-xl" 
-                        to={{ pathname: "/story/" + tag.tag_name,
+                        to={{ pathname: "/tag/" + tag.tag_name,
                             state: {token: this.state.token, user: this.state.user}}}>
                     {tag.tag_name}
                     </Link>
-                    </div>
-                </Item>
-                </li>  
-                </div>
             ))}
-            </ul>
+            </div>
+            </div>
             </div>
             </div>
             </div>

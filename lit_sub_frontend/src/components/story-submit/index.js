@@ -1,9 +1,8 @@
 import React from 'react';
-import { Link } from "react-router-dom";
 import NavBar from "../common/nav-bar";
-import { Listbox, Transition, RadioGroup} from '@headlessui/react';
-import { ThumbUpIcon, ChevronDownIcon } from '@heroicons/react/outline';
 import Select from 'react-select'
+import selection from '../common/selection';
+import Selection from '../common/selection';
 
 export default class StorySubmit extends React.Component {
     constructor(props) {
@@ -19,6 +18,7 @@ export default class StorySubmit extends React.Component {
             submitted: false,
             selectedOption: null,
             tags: [],
+            options: [],
         };
         this.url = "http://127.0.0.1:8000/" 
         this.handleChange = this.handleChange.bind(this)
@@ -65,6 +65,7 @@ export default class StorySubmit extends React.Component {
             }
         )
     }
+    
     componentDidMount(){
         fetch(this.url+'tag/')
         .then(res => res.json())
@@ -73,14 +74,15 @@ export default class StorySubmit extends React.Component {
                 tags: result,
             })
         )
+        .then( () => {
+            for (var i = 0; i < this.state.tags.length; i += 1) {
+                this.state.options.push({value: this.state.tags[i].id, label: this.state.tags[i].tag_name})
+            }
+        })
     }
 
     render(){
         const {user, token} = this.state
-        const options = [];
-        for (var i = 0; i < this.state.tags.length; i += 1) {
-            options.push({value: this.state.tags[i].id, label: this.state.tags[i].tag_name})
-        }
         return(
             <div>
             <NavBar user={user} token={token}/>
@@ -111,7 +113,11 @@ export default class StorySubmit extends React.Component {
                 <label>
                 <p class="ml-8">Tags:</p>
                 </label>
-                <Select onChange={this.handleTagChange} className="w-1/2 ml-8" isMulti options={options}/>
+                <Selection tags={this.state.tags}
+                 token={this.state.token} 
+                 handleTagChange={this.handleTagChange} 
+                 options={this.state.options}
+                 />
                 </div>
                 <div className="flex flex-col items-center mt-5">
                 <input type="submit" value="Submit" class="rounded mb-10 py-2 text-lg w-8/12 py-1 bg-purple-700 text-white hover:bg-purple-600 hover:text-black cursor-pointer"/>
