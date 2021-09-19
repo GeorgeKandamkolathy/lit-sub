@@ -10,8 +10,8 @@ export default class TagStory extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: (this.props.location.state == undefined ? null : this.props.location.state.user),
-            token: (this.props.location.state == undefined ? null : this.props.location.state.token),
+            user: (this.props.location.state === undefined ? null : this.props.location.state.user),
+            token: (this.props.location.state === undefined ? null : this.props.location.state.token),
             tag: this.props.match.params.tag_name,
             stories: [],
             selectedOrder: "all"

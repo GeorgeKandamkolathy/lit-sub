@@ -1,8 +1,7 @@
 import React from 'react';
-import { useParams } from "react-router";
 import NavBar from "../common/nav-bar";
 import { AnnotationIcon, ThumbUpIcon as ThumbUpIconOutline } from '@heroicons/react/outline';
-import { ArrowDownIcon, ArrowUpIcon, ThumbUpIcon as ThumbUpIconSolid } from '@heroicons/react/solid';
+import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/solid';
 
 export default class StoryPublic extends React.Component {
     constructor(props) {
@@ -29,11 +28,11 @@ export default class StoryPublic extends React.Component {
         const target = event.currentTarget;
         const value = target.value;
         console.log(this.state.fontSize)
-        if (value == 'small' && this.state.fontSize > 0){
+        if (value === 'small' && this.state.fontSize > 0){
             this.setState({
                 fontSize: this.state.fontSize - 1
         });}
-        else if (value == 'large' && this.state.fontSize < 6){
+        else if (value === 'large' && this.state.fontSize < 6){
             this.setState({
                 fontSize: this.state.fontSize + 1
         });}
@@ -49,7 +48,7 @@ export default class StoryPublic extends React.Component {
             }
         })
         .then((res) => {
-            if (res.status == 200){
+            if (res.status === 200){
                 return res.json()
             }
             throw res
@@ -62,7 +61,7 @@ export default class StoryPublic extends React.Component {
             }
         )
         .catch((error) => {
-            this.setState({
+            this.setState({ 
             })
         })
     }
@@ -136,7 +135,7 @@ export default class StoryPublic extends React.Component {
 
 
     render(){
-        const {story, error, token, fontSize, user} = this.state 
+        const {story, error, token, user} = this.state 
         let sizes = ['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 'text-3xl']
         console.log(this.props)
         console.log(story)
@@ -177,7 +176,7 @@ export default class StoryPublic extends React.Component {
                             <textarea class="resize-none w-6/12 rounded border-2 border-black-400 focus:outline-none focus:ring-2 focus:border-purple-300" rows="1" cols="30" name="comment_text" value={this.state.comment_text} onChange={this.handleChange}/>
                             <input type="submit" value="Comment" class="rounded py-1 px-1 bg-purple-700 text-white hover:bg-purple-400 hover:text-black cursor-pointer"/>
                         </form>
-                        {this.state.comments.length != 0 ? (
+                        {this.state.comments.length !== 0 ? (
                         <ul>
                         {this.state.comments.map(comment => (
                             <div class="flex justify-center mt-1">

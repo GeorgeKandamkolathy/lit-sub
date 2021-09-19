@@ -103,7 +103,7 @@ export default class StoryEdit extends React.Component {
                         <p class="px-20 mt-10">{story.story_text}</p>
                         </div>
                         </div>
-
+                        
                         <div class="flex">
                         <p class="ml-72 mb-5">{this.state.comments.length} comments</p>
                         <ThumbUpIconOutline className="h-5 w-5"/>
@@ -112,7 +112,7 @@ export default class StoryEdit extends React.Component {
                             <textarea class="resize-none w-6/12 rounded border-2 border-black-400 focus:outline-none focus:ring-2 focus:border-purple-300" rows="1" cols="30" name="comment_text" value={this.state.comment_text} onChange={this.handleChange}/>
                             <input type="submit" value="Comment" class="rounded py-1 px-1 bg-purple-700 text-white hover:bg-purple-400 hover:text-black cursor-pointer"/>
                         </form>
-                        {this.state.comments.length != 0 ? (
+                        {this.state.comments.length !== 0 ? (
                         <ul>
                         {this.state.comments.map(comment => (
                             <div class="flex justify-center mt-1">

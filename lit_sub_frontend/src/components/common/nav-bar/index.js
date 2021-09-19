@@ -1,12 +1,9 @@
 import React from "react"
 import {
-    BrowserRouter as Router,
-    Route,
     Link,
-    useLocation,
     Redirect,
   } from "react-router-dom";
-import { Listbox, Menu, Transition, Switch } from '@headlessui/react';
+import { Menu, Transition, Switch } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import { SearchIcon } from "@heroicons/react/outline";
 

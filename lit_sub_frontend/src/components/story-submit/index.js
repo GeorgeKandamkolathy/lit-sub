@@ -1,7 +1,5 @@
 import React from 'react';
 import NavBar from "../common/nav-bar";
-import Select from 'react-select'
-import selection from '../common/selection';
 import Selection from '../common/selection';
 
 export default class StorySubmit extends React.Component {
@@ -10,8 +8,8 @@ export default class StorySubmit extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            user: (this.props.location.state == undefined ? null : this.props.location.state.user),
-            token: (this.props.location.state == undefined ? null : this.props.location.state.token),
+            user: (this.props.location.state === undefined ? null : this.props.location.state.user),
+            token: (this.props.location.state === undefined ? null : this.props.location.state.token),
             story_text: null,
             story_title: null,
             synopsis: null,

@@ -1,3 +1,4 @@
+from tag.serializers import TagSerializer
 from rest_framework import pagination
 from .models import Comment, Story, Like
 from tag.models import Tag
@@ -51,6 +52,13 @@ class submit_view(APIView):
 
     def post(self, request):
         data = request.data
+
+        for id in request.data['tags']:
+            tag = Tag.objects.get(id=id)
+            serializier = TagSerializer(tag, data={"story_count":tag.story_count + 1}, partial=True)
+            if serializier.is_valid():
+                serializier.save()
+
         serializer = StorySerializer(data=data)
         if serializer.is_valid():
             serializer.save(author=request.user, author_name=request.user.username)

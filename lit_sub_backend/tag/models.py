@@ -5,5 +5,5 @@ from user.models import User
 
 class Tag(models.Model):
     tag_name = CharField(max_length=50)
-    #story_count = IntegerField(default=0)
+    story_count = IntegerField(default=0, blank=True)
     
