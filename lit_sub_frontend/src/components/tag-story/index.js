@@ -1,75 +1,56 @@
 import React from 'react';
-import { Link } from "react-router-dom";
-import NavBar from "../common/nav-bar";
-import { Listbox, Transition, RadioGroup} from '@headlessui/react';
-import { ThumbUpIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline';
 import Item from '../common/item';
+import NavBar from '../common/nav-bar';
 import OrderList from '../common/order-list';
 import DateRadio from '../common/date-radio';
+import { Link } from 'react-router-dom';
+import { ThumbUpIcon } from '@heroicons/react/outline';
 
-export default class StoryView extends React.Component {
+export default class TagStory extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            error: null,
-            isLoaded: false,
-            user: (this.props.location.state == undefined ? null : this.props.location.state.user),
+            user: (this.props.location.state === undefined ? null : this.props.location.state.user),
+            token: (this.props.location.state === undefined ? null : this.props.location.state.token),
+            tag: this.props.match.params.tag_name,
             stories: [],
-            token: (this.props.location.state == undefined ? null : this.props.location.state.token),
-            selectedOrder: "top",
-            selectedTime: "7 Days",
+            selectedOrder: "all"
         };
         this.url = "http://127.0.0.1:8000/" 
-        this.componentDidMount = this.componentDidMount.bind(this)
-        this.onOrderChange = this.onOrderChange.bind(this)
     }
 
-    onOrderChange(value){
-        this.setState({
-            selectedOrder: value
-        }, () => fetch(this.url + "story/sort/"+ this.state.selectedOrder +"/?limit=100&offset=0")
-        .then(res => res.json())
-        .then((result) =>
-            this.setState({
-                isLoaded: true,
-                stories: result.results,
-            }),
-            (error) =>
-            this.setState({
-                isLoaded: true,
-                error,
-            })
-        ))
-    }
-
+    
     componentDidMount(){
-        fetch(this.url + "story/sort/top/?limit=100&offset=0")
+        fetch(this.url + "story/tag/" + this.state.tag + "/")
         .then(res => res.json())
-        .then((result) =>
-            this.setState({
-                isLoaded: true,
-                stories: result.results,
-            }),
-            (error) =>
-            this.setState({
-                isLoaded: true,
-                error,
-            })
+        .then(
+            (result) => {
+                this.setState({
+                    isLoaded: true,
+                    stories: result.results,
+                });
+            },
+            (error) => {
+                this.setState({
+                  isLoaded: true,
+                  error: error,
+                });
+            }
         )
     }
-    
+
     render(){
-        const {user, token, stories, error, selectedTime, selectedOrder} = this.state
+        const {user, token} = this.state
         return(
             <div>
-            <NavBar user={user} token={token}/>
+                <NavBar user={user} token={token}/>
             <div class="bg-blue-50 min-h-screen h-full pt-7">
             <div class="relative">
             <h2 class="text-3xl mb-14 text-center">
-                All Stories
+                {this.state.tag}
             </h2>
             <div class="absolute text-center left-27% top-12">
-                <OrderList onOrderChange={this.onOrderChange}/>
+                <OrderList onOrderChange={(value) => {this.setState({selectedOrder:value})}}/>
             </div>
             <div class="absolute top-14 right-1/4">
                 <DateRadio/>
@@ -100,9 +81,8 @@ export default class StoryView extends React.Component {
             ))}
             </ul>
             </div>
+            </div>                
             </div>
-            </div>
-           
-        );
+        )
     }
 }

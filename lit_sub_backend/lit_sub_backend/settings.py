@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'story.apps.StoryConfig',
     'search.apps.SearchConfig',
+    'tag.apps.TagConfig',
 ]
 
 SITE_ID = 1

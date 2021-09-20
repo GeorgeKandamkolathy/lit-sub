@@ -12,6 +12,7 @@ export default class Home extends React.Component {
             user: (this.props.location.state == undefined ? null : this.props.location.state.user),
             authors: [],
             stories: [],
+            tags: [],
             token: (this.props.location.state == undefined ? null : this.props.location.state.token),
             prev_story_page: null,
             next_story_page: "http://127.0.0.1:8000/story/sort/top/?limit=12&offset=0",
@@ -150,6 +151,22 @@ export default class Home extends React.Component {
                 });
             }
         )
+        fetch(this.url + 'tag/')
+        .then(res => res.json())
+        .then(
+            (result) => {
+                this.setState({
+                    isLoaded: true,
+                    tags: result,
+                });
+            },
+            (error) => {
+                this.setState({
+                  isLoaded: true,
+                  error
+                });
+            }
+            )
     }
 
     render() {
@@ -162,7 +179,7 @@ export default class Home extends React.Component {
                     <NavBar user={this.state.user} token={this.state.token}/>
                     <h1 class="mb-20 ml-14 mt-4 text-5xl font-bold">LITSUB</h1>
                     <div class="bg-purple-600 bg-opacity-25 shadow-lg">
-                        <div class="relative flex flex-row h-72 pl-10 gap-20">
+                        <div class="relative flex flex-row min-h-72 h-auto pb-3 pl-10 gap-20">
                             <div>
                             <h3 class="text-purple-600 font-bold text-4xl w-12 mt-24 mr-5">Top Stories</h3>
                             </div>
@@ -200,9 +217,9 @@ export default class Home extends React.Component {
                         </div>
                     </div>
                     <div class="bg-blue-600 bg-opacity-25 mt-16 shadow-lg h-auto">
-                        <div class="relative flex flex-row h-72 pl-10 gap-20">
+                        <div class="relative flex flex-row min-h-72 h-auto pb-3 pl-10 gap-20">
                         <div>
-                        <h3 class="text-blue-600 font-bold text-4xl w-12 mt-24 mr-8">Popular Authors</h3>
+                        <h3 class="text-blue-600 font-bold text-4xl w-12 mt-24 mr-5">Popular Authors</h3>
                         </div>
                             {this.state.author_offset != 0 ?
                             (
@@ -231,6 +248,47 @@ export default class Home extends React.Component {
                             </div>
                             </div>
                     </div>    
+
+
+
+
+                    <div class="bg-pink-600 bg-opacity-25 mt-16 shadow-lg">
+                        <div class="relative flex flex-row min-h-72 h-auto pb-3 pl-10 gap-20">
+                            <div>
+                            <h3 class="text-pink-600 font-bold text-4xl w-12 mt-24 mr-5">Popular Tags</h3>
+                            </div>
+                            {this.state.story_offset != 0 ?
+                            (
+                            <div id="story_prev" className="flex flex-col justify-center">
+                            <ArrowLeftIcon id="story_prev" onClick={this.onClick} class="transform h-5 w-5 hover:scale-150 hover:text-blue-700 cursor-pointer"/>
+                            </div>
+                            ) : (
+                                <div/>
+                            )
+                            }
+                            <ul>
+                            <div class="grid grid-cols-3 gap-x-4 mt-6 -ml-10" >
+                            {this.state.tags.slice(this.state.story_offset, this.state.story_offset + 6).map(tag => (
+                            <li key={tag.id} className="min-h-24">
+                                <div class="flex flex-col w-96">
+                                    <div class="text-2xl font-bold hover:text-gray-600">
+                                        <Link to={{ pathname: "/tag/" + tag.tag_name,
+                                            state: {token: this.state.token, user: this.state.user}}}>
+                                        {tag.tag_name}
+                                        </Link>
+                                    </div>
+                                </div>
+                            </li>
+                            ))}
+                            </div>
+                            </ul>   
+                            <div id="story_next" className="flex flex-col justify-center -ml-5">
+                            <ArrowRightIcon id="story_next" onClick={this.onClick} class="transform h-5 w-5 hover:scale-150 hover:text-blue-700 cursor-pointer -ml-10"/>
+                            </div>
+                        </div>
+                    </div>
+
+
 
                     <div class="bg-gray-100 h-40 mt-20">
 

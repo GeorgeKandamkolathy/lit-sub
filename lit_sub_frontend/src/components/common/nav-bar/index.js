@@ -1,12 +1,9 @@
 import React from "react"
 import {
-    BrowserRouter as Router,
-    Route,
     Link,
-    useLocation,
     Redirect,
   } from "react-router-dom";
-import { Listbox, Menu, Transition, Switch } from '@headlessui/react';
+import { Menu, Transition, Switch } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import { SearchIcon } from "@heroicons/react/outline";
 
@@ -97,8 +94,9 @@ export default class NavBar extends React.Component{
                         <p class="text-3xl font-bold">LITSUB</p>
                     </Link>
                         <div class=" mt-1">
-                        <Link to={{pathname: "/story", state: { token: this.state.token, user: this.state.user}}} class="m-16 text-lg hover:text-gray-600">Stories</Link>
-                        <Link to={{pathname: "/authors", state: { token: this.state.token, user: this.state.user}}} class="m-8 text-lg hover:text-gray-600">Authors</Link>
+                        <Link to={{pathname: "/story", state: { token: this.state.token, user: this.state.user}}} class="m-12 text-lg hover:text-gray-600">Stories</Link>
+                        <Link to={{pathname: "/authors", state: { token: this.state.token, user: this.state.user}}} class="m-12 text-lg hover:text-gray-600">Authors</Link>
+                        <Link to={{pathname: "/tags", state: { token: this.state.token, user: this.state.user}}} class="m-12 text-lg hover:text-gray-600">Tags</Link>
                         </div>
 
                         {this.state.searchBar ?
@@ -125,8 +123,9 @@ export default class NavBar extends React.Component{
                         )
                         }
 
-                        <div className="absolute right-48 h-16 w-16">
+                        <div>
                         {isLoggedIn ? (
+                            <div className="absolute right-48 h-16 w-16">
                             <Menu>
                                 <Menu.Button class="inline-flex justify-center bg-purple-700 pb-2 pt-1 px-4 rounded-full text-white hover:bg-purple-500 hover:text-black">
                                     {this.state.user}
@@ -147,24 +146,36 @@ export default class NavBar extends React.Component{
                                 <Menu.Items class="w-32 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                     <Menu.Item>
                                         {({active}) => (
-                                        <Link to={{pathname:"/me", state: {token: this.state.token, user: this.state.user}}} class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}> My Account</Link>
+                                        <Link to={{pathname:"/me", state: {token: this.state.token, user: this.state.user}}} 
+                                            class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}>
+                                                My Account
+                                        </Link>
                                         )}
                                     </Menu.Item>
                                     <Menu.Item>
                                         {({active}) => (
-                                        <Link to={{pathname:"/", state: {token: null, user: null}}} onClick={this.handleLogout} class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}> Logout</Link>
+                                        <Link to={{pathname:"/", state: {token: null, user: null}}} onClick={this.handleLogout} 
+                                            class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}> 
+                                                Logout
+                                        </Link>
                                         )}
                                     </Menu.Item>
                                     <Menu.Item>
                                         {({active}) => (
-                                        <Link to={{pathname: "/submit", state:{token: this.state.token, user: this.state.user}}} class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}>Submit</Link>
+                                        <Link to={{pathname: "/submit", state:{token: this.state.token, user: this.state.user}}} 
+                                            class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}>
+                                                Submit
+                                        </Link>
                                         )}
                                     </Menu.Item>
                                 </Menu.Items>
                                 </Transition>
                             </Menu>
+                            </div>
                         ) : (
-                            <Link to="/login" class="bg-purple-700 pb-2 pt-1 px-4 rounded-full text-white hover:bg-purple-600 hover:text-black">Login</Link>
+                            <div className="absolute right-48 top-1">
+                            <Link to="/login" class="h-16 w-16 bg-purple-700 pb-2 pt-1 px-4 rounded-full text-white hover:bg-purple-600 hover:text-black">Login</Link>
+                            </div>
                         )
                         }
                         </div>

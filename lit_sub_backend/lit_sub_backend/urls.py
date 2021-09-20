@@ -22,5 +22,6 @@ urlpatterns = [
     path('story/', include('story.urls')),
     path('author/', include('user.urls')),
     path('search/', include('search.urls')),
+    path('tag/', include('tag.urls')),
     path('admin/', admin.site.urls),
 ]
