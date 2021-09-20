@@ -3,19 +3,20 @@ import { Link } from 'react-router-dom';
 import NavBar from "../common/nav-bar";
 import { AnnotationIcon, ThumbUpIcon as ThumbUpIconOutline, ChartBarIcon } from '@heroicons/react/outline';
 import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/solid';
+import Cookies from "js-cookie";
 
 export default class StoryPublic extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             error: null,
-            user: this.props.user,
+            user: Cookies.get('user'),
             isLoaded: false,
             story_id: this.props.story_id,
             story: this.props.story,
             comments: [],
             comment_text: "",
-            token: this.props.token,
+            token: Cookies.get('token'),
             fontSize: 2,
             tags:this.props.tags,
         };
@@ -118,7 +119,7 @@ export default class StoryPublic extends React.Component {
 
 
     render(){
-        const {story, error, token, user} = this.state 
+        const {story, error} = this.state 
         let sizes = ['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 'text-3xl']
         console.log(this.props)
         console.log(story.tags)
@@ -128,7 +129,7 @@ export default class StoryPublic extends React.Component {
         else{
             return(
                 <div>
-                    <NavBar user={user} token={token}/>
+                    <NavBar/>
                     <div className="flex flex-col bg-purple-50 h-auto">
                         <div className="flex justify-center h-screen pb-26 mb-4">
                         <div className="bg-white w-3/4 h-auto mt-14 rounded-lg mr-10">
@@ -144,8 +145,7 @@ export default class StoryPublic extends React.Component {
                             <div className="flex ">
                                 {this.state.tags.map(tag => (
                                     <div className="rounded bg-blue-50 px-1 pb-1 mx-1 hover:bg-blue-100">
-                                        <Link to={{ pathname: "/tag/" + tag,
-                                                state: {token: this.state.token, user: this.state.user}}}>
+                                        <Link to={{ pathname: "/tag/" + tag}}>
                                             {tag}
                                         </Link>
                                     </div>

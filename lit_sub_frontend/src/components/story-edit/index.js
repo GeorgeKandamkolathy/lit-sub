@@ -1,19 +1,20 @@
 import React from 'react';
 import NavBar from "../common/nav-bar";
 import { ThumbUpIcon as ThumbUpIconOutline } from '@heroicons/react/outline';
+import Cookies from "js-cookie";
 
 export default class StoryEdit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             error: null,
-            user: this.props.user,
+            user: Cookies.get('user'),
             isLoaded: false,
             story_id: this.props.story_id,
             story: this.props.story,
             comments: [],
             comment_text: "",
-            token: this.props.token,
+            token: Cookies.get('token'),
             tags: this.props.tags,
         };
         this.url = "http://127.0.0.1:8000/" 

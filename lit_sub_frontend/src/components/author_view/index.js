@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import NavBar from "../common/nav-bar";
-import { Listbox, Transition, RadioGroup} from '@headlessui/react';
-import { ThumbUpIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline';
 import Item from '../common/item';
 import OrderList from '../common/order-list';
 import DateRadio from '../common/date-radio';
+import Cookies from "js-cookie";
 
 export default class AuthorView extends React.Component {
     constructor(props) {
@@ -13,9 +12,9 @@ export default class AuthorView extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            user: (this.props.location.state == undefined ? null : this.props.location.state.user),
+            user: Cookies.get('user'),
             authors: [],
-            token: (this.props.location.state == undefined ? null : this.props.location.state.token),
+            token: Cookies.get('token'),
             selectedOrder: "Top",
             selectedTime: "7 Days",
         };
@@ -40,10 +39,9 @@ export default class AuthorView extends React.Component {
     }
     
     render(){
-        const {user, token, stories, error, selectedTime, selectedOrder} = this.state
         return(
             <div>
-            <NavBar user={user} token={token}/>
+            <NavBar/>
             <div class="bg-blue-50 min-h-screen h-full pt-7">
             <div class="relative">
             <h2 class="text-3xl mb-14 text-center">
@@ -64,8 +62,7 @@ export default class AuthorView extends React.Component {
                 <Item>
                     <div class="flex flex-col ml-5 p-4 max-w-xs">
                     <Link class="font-medium text-xl" 
-                        to={{ pathname: "/author/" + author.id,
-                            state: {token: this.state.token, user: this.state.user}}}>
+                        to={{ pathname: "/author/" + author.id}}>
                     {author.username}
                     </Link>
                     <div class="flex ml-2">

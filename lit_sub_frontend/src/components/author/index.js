@@ -4,6 +4,7 @@ import NavBar from '../common/nav-bar';
 import profile from '../../local/profile.png'
 import Item from '../common/item';
 import { ThumbUpIcon } from '@heroicons/react/outline';
+import Cookies from "js-cookie";
 
 export default class Author extends React.Component {
     constructor(props) {
@@ -11,13 +12,13 @@ export default class Author extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            user: (this.props.location.state == undefined ? null : this.props.location.state.user),
+            user: Cookies.get('user'),
             bio: null,
             username: "",
             stories_set:[],
             stories:[],
             author_id: this.props.match.params.author_id,
-            token: (this.props.location.state == undefined ? null : this.props.location.state.token),
+            token: Cookies.get('token'),
         };
         this.url = "http://127.0.0.1:8000/" 
     }
@@ -57,11 +58,9 @@ export default class Author extends React.Component {
     }
 
     render(){
-        const {user, token, stories, error} = this.state;
-        console.log(this.state.token);
         return(
             <div>
-                <NavBar user={user} token={token}/>
+                <NavBar/>
                 <div className="flex">
                     <img src={profile}/>
                     <div className="ml-10">
@@ -79,13 +78,13 @@ export default class Author extends React.Component {
                         <Item>
                             <div className="flex flex-col ml-5 p-4 max-w-xs">
                             <Link className="font-medium text-xl" 
-                                to={{ pathname: "/story/" + story.id,
-                                    state: {token: this.state.token, user: this.state.user}}}>
+                                to={{ pathname: "/story/" + story.id}}>
                             {story.story_title}
                             </Link>
                             <div className="flex ml-2">
-                            <Link className="font-bold ml-4 w-auto" to={{ pathname: "/author/"+ story.author,
-                                            state: {token: this.state.token, user: this.state.user}}}>{story.author_name}</Link>
+                            <Link className="font-bold ml-4 w-auto" to={{ pathname: "/author/"+ story.author}}>
+                                {story.author_name}
+                            </Link>
                             <ThumbUpIcon className="w-4 h-4 mt-1 ml-4" />
                             <p className="ml-1">{story.likes}</p>
                             </div>

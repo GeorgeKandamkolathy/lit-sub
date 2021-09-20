@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect, Link } from 'react-router-dom';
-import {XIcon} from '@heroicons/react/solid'
+import {XIcon} from '@heroicons/react/solid';
+import Cookies from 'js-cookie'
 
 export default class Login extends React.Component {
     constructor(props) {
@@ -44,27 +45,24 @@ export default class Login extends React.Component {
                 token: result.key,
                 user: this.state.usernameValue,
                 passwordValue: ""
-            })},
+            }, () => {Cookies.set("token", this.state.token); Cookies.set("user", this.state.user)} )},
             (error) => {
                 this.setState({
                     error: error,
                     passwordValue: "",
                 })
             }
-            )
+        )
     }
 
     render() {
-        const fail = this.state.token == undefined;
+        const fail = this.state.token === undefined;
         if (this.state.error){
             return <div>Error: {this.state.error.message}</div>;
         }
         else if (this.state.token !== "" && this.state.token !== undefined){
             return(
-                <Redirect to={{
-                    pathname: "/",
-                    state: { token: this.state.token, user: this.state.user}
-                  }} />
+                <Redirect to={{ pathname: "/" }} />
             );
         }
         else{
