@@ -9,7 +9,7 @@ class StorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Story
-        fields = ['id', 'story_text', 'story_title', 'synopsis', 'author', 'author_name', 'likes', 'tags']
+        fields = ['id', 'story_text', 'story_title', 'synopsis', 'author', 'author_name', 'likes', 'tags', 'view_count']
 
     def get_tags(self,obj):
         serializer = TagSerializer(obj.tags, many=True)

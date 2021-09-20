@@ -10,10 +10,11 @@ export default class StoryEdit extends React.Component {
             user: this.props.user,
             isLoaded: false,
             story_id: this.props.story_id,
-            story: [],
+            story: this.props.story,
             comments: [],
             comment_text: "",
             token: this.props.token,
+            tags: this.props.tags,
         };
         this.url = "http://127.0.0.1:8000/" 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -54,25 +55,6 @@ export default class StoryEdit extends React.Component {
     }
 
     componentDidMount(){
-        fetch(this.url + "story/" + this.state.story_id + "/", {
-            method: 'GET',
-            mode: 'cors', 
-        })
-        .then(res => res.json())
-        .then(
-            (result) => {
-                this.setState({
-                    isLoaded: true,
-                    story: result
-                });
-            },
-            (error) => {
-                this.setState({
-                  isLoaded: true,
-                  error: error,
-                });
-            }
-        )
         fetch(this.url + "story/comments/"+this.state.story_id +"/0")
         .then(res => res.json())
         .then((result) => {

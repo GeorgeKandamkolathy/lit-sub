@@ -55,9 +55,9 @@ class submit_view(APIView):
 
         for id in request.data['tags']:
             tag = Tag.objects.get(id=id)
-            serializier = TagSerializer(tag, data={"story_count":tag.story_count + 1}, partial=True)
-            if serializier.is_valid():
-                serializier.save()
+            serializer = TagSerializer(tag, data={"story_count":tag.story_count + 1}, partial=True)
+            if serializer.is_valid():
+                serializer.save()
 
         serializer = StorySerializer(data=data)
         if serializer.is_valid():
@@ -82,8 +82,12 @@ class story_view(APIView):
 
     def get(self, request, story_id):
         story = self.get_object(story_id)
-        serializer = StorySerializer(story)
-        return Response(serializer.data)
+        serializer = StorySerializer(story, data={"view_count":story.view_count + 1}, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)      
+       
     
     def post(self, request, story_id):
         data = request.data

@@ -6,11 +6,12 @@ export default class Story extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: (this.props.location.state == undefined ? null : this.props.location.state.user),
+            user: (this.props.location.state === undefined ? null : this.props.location.state.user),
             story_id: this.props.match.params.story_id,
             story: null,
-            token: (this.props.location.state == undefined ? null : this.props.location.state.token),
+            token: (this.props.location.state === undefined ? null : this.props.location.state.token),
             is_authenticated: false,
+            tags: [],
         };
         this.url = "http://127.0.0.1:8000/" 
     }
@@ -24,7 +25,8 @@ export default class Story extends React.Component {
                 this.setState({
                     isLoaded: true,
                     story: result,
-                    is_authenticated: result['author_name'] == this.state.user,
+                    is_authenticated: result['author_name'] === this.state.user,
+                    tags: result.tags,
                 });
             },
             (error) => {
@@ -37,18 +39,18 @@ export default class Story extends React.Component {
     }
 
     render(){
-        const {user, token, story_id, isLoaded} = this.state
+        const {user, token, story_id, isLoaded, story, tags} = this.state
         if(!isLoaded){
             return <p>Loading</p>;    
         }
         else if (this.state.is_authenticated) {
             return (
-                <StoryEdit user={user} token={token} story_id={story_id}/>
+                <StoryEdit user={user} token={token} story_id={story_id} story={story} tags={tags}/>
             );
         }
         else{
             return(
-                <StoryPublic user={user} token={token} story_id={story_id}/>
+                <StoryPublic user={user} token={token} story_id={story_id} story={story} tags={tags}/>
             );
         }   
     }
