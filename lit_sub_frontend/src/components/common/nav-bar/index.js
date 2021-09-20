@@ -123,8 +123,9 @@ export default class NavBar extends React.Component{
                         )
                         }
 
-                        <div className="absolute right-48 h-16 w-16">
+                        <div>
                         {isLoggedIn ? (
+                            <div className="absolute right-48 h-16 w-16">
                             <Menu>
                                 <Menu.Button class="inline-flex justify-center bg-purple-700 pb-2 pt-1 px-4 rounded-full text-white hover:bg-purple-500 hover:text-black">
                                     {this.state.user}
@@ -170,8 +171,11 @@ export default class NavBar extends React.Component{
                                 </Menu.Items>
                                 </Transition>
                             </Menu>
+                            </div>
                         ) : (
-                            <Link to="/login" class="bg-purple-700 pb-2 pt-1 px-4 rounded-full text-white hover:bg-purple-600 hover:text-black">Login</Link>
+                            <div className="absolute right-48 top-1">
+                            <Link to="/login" class="h-16 w-16 bg-purple-700 pb-2 pt-1 px-4 rounded-full text-white hover:bg-purple-600 hover:text-black">Login</Link>
+                            </div>
                         )
                         }
                         </div>

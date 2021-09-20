@@ -66,11 +66,16 @@ export default class TagView extends React.Component {
             <div className="w-1/2 self-center bg-white p-2 rounded-md">     
             <div class="flex justify-start">
             {this.state.tags.map(tag => (
+                tag.story_count !== 0 ?(
                     <Link class={"font-medium p-2 " + sizes[this.fontSizer(tag.story_count)]}
                         to={{ pathname: "/tag/" + tag.tag_name,
                             state: {token: this.state.token, user: this.state.user}}}>
                     {tag.tag_name}
                     </Link>
+                ):(
+                    <div/>
+                )
+
             ))}
             </div>
             </div>

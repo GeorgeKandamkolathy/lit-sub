@@ -1,11 +1,23 @@
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 from .models import Story, Comment
 from tag.models import Tag
+from tag.serializers import TagSerializer
 
 class StorySerializer(serializers.ModelSerializer):
+    tags = SerializerMethodField()
+
     class Meta:
         model = Story
         fields = ['id', 'story_text', 'story_title', 'synopsis', 'author', 'author_name', 'likes', 'tags']
+
+    def get_tags(self,obj):
+        serializer = TagSerializer(obj.tags, many=True)
+        tags = []
+        for tag in serializer.data:
+            tags.append(tag["tag_name"])
+
+        return tags
 
     def create(self, validated_data):
         if 'tags' in validated_data:
