@@ -52,12 +52,15 @@ class submit_view(APIView):
 
     def post(self, request):
         data = request.data
-
-        for id in request.data['tags']:
-            tag = Tag.objects.get(id=id)
-            serializer = TagSerializer(tag, data={"story_count":tag.story_count + 1}, partial=True)
-            if serializer.is_valid():
-                serializer.save()
+        
+        if request.data['tags'] != None:
+            for id in request.data['tags']:
+                tag = Tag.objects.get(id=id)
+                serializer = TagSerializer(tag, data={"story_count":tag.story_count + 1}, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+        else:
+            request.data.pop('tags')
 
         serializer = StorySerializer(data=data)
         if serializer.is_valid():

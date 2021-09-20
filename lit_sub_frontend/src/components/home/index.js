@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom'
 import NavBar from '../common/nav-bar';
 import { ArrowRightIcon, ArrowLeftIcon } from '@heroicons/react/solid';
+import Cookie from 'js-cookie';
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -9,11 +10,11 @@ export default class Home extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            user: (this.props.location.state == undefined ? null : this.props.location.state.user),
+            user: Cookie.get('user'),
             authors: [],
             stories: [],
             tags: [],
-            token: (this.props.location.state == undefined ? null : this.props.location.state.token),
+            token: Cookie.get('token'),
             prev_story_page: null,
             next_story_page: "http://127.0.0.1:8000/story/sort/top/?limit=12&offset=0",
             story_offset: 0,
@@ -183,7 +184,7 @@ export default class Home extends React.Component {
                             <div>
                             <h3 class="text-purple-600 font-bold text-4xl w-12 mt-24 mr-5">Top Stories</h3>
                             </div>
-                            {this.state.story_offset != 0 ?
+                            {this.state.story_offset !== 0 ?
                             (
                             <div id="story_prev" className="flex flex-col justify-center">
                             <ArrowLeftIcon id="story_prev" onClick={this.onClick} class="transform h-5 w-5 hover:scale-150 hover:text-blue-700 cursor-pointer"/>
@@ -198,14 +199,14 @@ export default class Home extends React.Component {
                             <li key={story.id} className="min-h-24">
                                 <div class="flex flex-col w-96">
                                     <div class="text-2xl font-bold hover:text-gray-600">
-                                        <Link to={{ pathname: "/story/" + story.id,
-                                            state: {token: this.state.token, user: this.state.user}}}>
+                                        <Link to={{ pathname: "/story/" + story.id}}>
                                         {story.story_title}
                                         </Link>
                                     </div>
                                     <div class="text-base">{story.synopsis}</div>
-                                    <div class="text-base italic"><Link to={{ pathname: "/author/" + story.author,
-                                            state: {token: this.state.token, user: this.state.user}}}>{story.author_name}</Link></div>
+                                    <div class="text-base italic"><Link to={{ pathname: "/author/" + story.author}}>
+                                                                    {story.author_name}
+                                                                    </Link></div>
                                 </div>
                             </li>
                             ))}
@@ -235,8 +236,7 @@ export default class Home extends React.Component {
                             {this.state.authors.slice(this.state.author_offset, this.state.author_offset + 12).map(author => (
                             <li key={author.id}>
                                 <div class="flex flex-col w-70">
-                                    <div class="text-2xl font-bold"><Link to={{ pathname: "/author/"+ author.id,
-                                            state: {token: this.state.token, user: this.state.user}}}>{author.username}</Link></div>
+                                    <div class="text-2xl font-bold"><Link to={{ pathname: "/author/"+ author.id}}>{author.username}</Link></div>
                                     <div class="text-base italic">{author.bio}</div>
                                 </div>
                             </li>
@@ -272,8 +272,7 @@ export default class Home extends React.Component {
                             <li key={tag.id} className="min-h-24">
                                 <div class="flex flex-col w-96">
                                     <div class="text-2xl font-bold hover:text-gray-600">
-                                        <Link to={{ pathname: "/tag/" + tag.tag_name,
-                                            state: {token: this.state.token, user: this.state.user}}}>
+                                        <Link to={{ pathname: "/tag/" + tag.tag_name}}>
                                         {tag.tag_name}
                                         </Link>
                                     </div>

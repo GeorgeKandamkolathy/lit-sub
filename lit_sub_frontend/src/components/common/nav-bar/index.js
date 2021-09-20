@@ -6,13 +6,14 @@ import {
 import { Menu, Transition, Switch } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import { SearchIcon } from "@heroicons/react/outline";
+import Cookies from "js-cookie";
 
 export default class NavBar extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            user:this.props.user,
-            token:this.props.token,
+            user: Cookies.get('user'),
+            token: Cookies.get('token'),
             darkMode: false,
             searchValue: "",
             search: false ,
@@ -70,6 +71,8 @@ export default class NavBar extends React.Component{
             user: null,
             token: null,
         }))
+        .then(Cookies.remove('user'))
+        .then(Cookies.remove('token'))
 
     }
 
@@ -90,13 +93,13 @@ export default class NavBar extends React.Component{
             return(
                 <div className="bg-white">
                     <div class="relative flex justify-center mt-4 pb-4">
-                    <Link to={{pathname: "/", state: { token: this.state.token, user: this.state.user}}} class="absolute left-48 font-medium rounded-md px-2 pb-2 text-lg hover:text-purple-700">
+                    <Link to={{pathname: "/"}} class="absolute left-48 font-medium rounded-md px-2 pb-2 text-lg hover:text-purple-700">
                         <p class="text-3xl font-bold">LITSUB</p>
                     </Link>
                         <div class=" mt-1">
-                        <Link to={{pathname: "/story", state: { token: this.state.token, user: this.state.user}}} class="m-12 text-lg hover:text-gray-600">Stories</Link>
-                        <Link to={{pathname: "/authors", state: { token: this.state.token, user: this.state.user}}} class="m-12 text-lg hover:text-gray-600">Authors</Link>
-                        <Link to={{pathname: "/tags", state: { token: this.state.token, user: this.state.user}}} class="m-12 text-lg hover:text-gray-600">Tags</Link>
+                        <Link to={{pathname: "/story"}} class="m-12 text-lg hover:text-gray-600">Stories</Link>
+                        <Link to={{pathname: "/authors"}} class="m-12 text-lg hover:text-gray-600">Authors</Link>
+                        <Link to={{pathname: "/tags"}} class="m-12 text-lg hover:text-gray-600">Tags</Link>
                         </div>
 
                         {this.state.searchBar ?
@@ -146,7 +149,7 @@ export default class NavBar extends React.Component{
                                 <Menu.Items class="w-32 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                     <Menu.Item>
                                         {({active}) => (
-                                        <Link to={{pathname:"/me", state: {token: this.state.token, user: this.state.user}}} 
+                                        <Link to={{pathname:"/me"}} 
                                             class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}>
                                                 My Account
                                         </Link>
@@ -154,7 +157,7 @@ export default class NavBar extends React.Component{
                                     </Menu.Item>
                                     <Menu.Item>
                                         {({active}) => (
-                                        <Link to={{pathname:"/", state: {token: null, user: null}}} onClick={this.handleLogout} 
+                                        <Link to={{pathname:"/"}} onClick={this.handleLogout} 
                                             class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}> 
                                                 Logout
                                         </Link>
@@ -162,7 +165,7 @@ export default class NavBar extends React.Component{
                                     </Menu.Item>
                                     <Menu.Item>
                                         {({active}) => (
-                                        <Link to={{pathname: "/submit", state:{token: this.state.token, user: this.state.user}}} 
+                                        <Link to={{pathname: "/submit"}} 
                                             class={`${ active ? "bg-purple-700 text-white": "text-gray-900"} group flex rounded-md items-center w-full px-2 py-2 text-sm`}>
                                                 Submit
                                         </Link>

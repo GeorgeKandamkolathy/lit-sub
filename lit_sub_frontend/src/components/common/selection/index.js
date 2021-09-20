@@ -1,5 +1,6 @@
 import React from "react";
 import CreatableSelect from 'react-select/creatable';
+import Cookies from "js-cookie"
 
 export default class Selection extends React.Component{
     constructor(props){
@@ -7,9 +8,9 @@ export default class Selection extends React.Component{
         this.state = {
             options: this.props.options,
             isLoading: false,
-            tags: this.props.tags,
+            tags: Cookies.get('user'),
             value: [],
-            token:this.props.token,
+            token: Cookies.get('token'),
             error: null,
         }
         this.url = "http://127.0.0.1:8000/" 
@@ -54,6 +55,7 @@ export default class Selection extends React.Component{
                     isLoading: false,
                     options: [...options, newOption],
                     value: [...this.state.value, newOption],
+                }, () => {this.props.handleTagChange(this.state.value);
                 });}
             )
 

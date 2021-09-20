@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect, Link } from 'react-router-dom';
-import {XIcon} from '@heroicons/react/solid'
+import Cookies from "js-cookie";
 
 export default class Register extends React.Component {
     constructor(props) {
@@ -8,8 +8,8 @@ export default class Register extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            user: null,
-            token: "",
+            user: Cookies.get('user'),
+            token: Cookies.get('token'),
             usernameValue: "",
             passwordValue: "",
             emailValue: "",
@@ -46,7 +46,7 @@ export default class Register extends React.Component {
                 registerError: result,
                 token: result.key,
                 user: this.state.usernameValue,
-            })},
+            }, () => {Cookies.set('user', this.state.user); Cookies.set('token', this.state.token)})},
             (error) => {
                 this.setState({
                     error: error,
@@ -57,17 +57,12 @@ export default class Register extends React.Component {
 
     render() {
         const {registerError} = this.state
-        const fail = this.state.token == undefined;
-        console.log(registerError)
         if (this.state.error){
             return <div>Error: {this.state.error.message}</div>;
         }
         else if (this.state.token !== "" && this.state.token !== undefined){
             return(
-                <Redirect to={{
-                    pathname: "/",
-                    state: { token: this.state.token, user: this.state.user}
-                  }} />
+                <Redirect to={{pathname: "/"}} />
             );
         }
         else{

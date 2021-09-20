@@ -1,15 +1,16 @@
 import React from 'react';
 import StoryEdit from '../story-edit';
 import StoryPublic from '../story-public';
+import Cookies from "js-cookie";
 
 export default class Story extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: (this.props.location.state === undefined ? null : this.props.location.state.user),
+            user: Cookies.get('user'),
             story_id: this.props.match.params.story_id,
             story: null,
-            token: (this.props.location.state === undefined ? null : this.props.location.state.token),
+            token: Cookies.get('user'),
             is_authenticated: false,
             tags: [],
         };
@@ -26,7 +27,7 @@ export default class Story extends React.Component {
                     isLoaded: true,
                     story: result,
                     is_authenticated: result['author_name'] === this.state.user,
-                    tags: result.tags,
+                    tags: result.tags_obj,
                 });
             },
             (error) => {
@@ -39,18 +40,18 @@ export default class Story extends React.Component {
     }
 
     render(){
-        const {user, token, story_id, isLoaded, story, tags} = this.state
+        const {story_id, isLoaded, story, tags} = this.state
         if(!isLoaded){
             return <p>Loading</p>;    
         }
         else if (this.state.is_authenticated) {
             return (
-                <StoryEdit user={user} token={token} story_id={story_id} story={story} tags={tags}/>
+                <StoryEdit story_id={story_id} story={story} tags={tags}/>
             );
         }
         else{
             return(
-                <StoryPublic user={user} token={token} story_id={story_id} story={story} tags={tags}/>
+                <StoryPublic story_id={story_id} story={story} tags={tags}/>
             );
         }   
     }

@@ -4,6 +4,7 @@ import NavBar from '../common/nav-bar';
 import profile from '../../local/profile.png'
 import Item from '../common/item';
 import { ThumbUpIcon, TrashIcon } from '@heroicons/react/solid';
+import Cookies from "js-cookie"
 
 export default class MyAccount extends React.Component {
     constructor(props) {
@@ -11,11 +12,11 @@ export default class MyAccount extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            user: (this.props.location.state == undefined ? null : this.props.location.state.user),
+            user: Cookies.get('user'),
             bio: null,
             stories_set:[],
             stories:[],
-            token: (this.props.location.state == undefined ? null : this.props.location.state.token),
+            token: Cookies.get('token'),
         };
         this.url = "http://127.0.0.1:8000/" 
         this.handleChange = this.handleChange.bind(this);
@@ -24,7 +25,8 @@ export default class MyAccount extends React.Component {
     }
 
     onDelete(event){
-        fetch(this.url+'story/' + event.currentTarget.id+ '/',{
+        const id = event.currentTarget.id;
+        fetch(this.url+'story/' + id + '/',{
             method: "DELETE",
             mode: 'cors',
             headers: {
@@ -32,6 +34,10 @@ export default class MyAccount extends React.Component {
                 'Authorization': 'Token ' + this.state.token
             },
         })
+        .then(this.setState({
+            stories: this.state.stories.filter((story) => { 
+                return Number(story.id) !== Number(id)
+            })}))
     }
 
     handleChange(event){
@@ -106,11 +112,10 @@ export default class MyAccount extends React.Component {
     }
 
     render(){
-        const {user, token, stories, error} = this.state;
-        console.log(this.state.token);
+        const {user} = this.state;
         return(
             <div>
-                <NavBar user={user} token={token}/>
+                <NavBar/>
                 <div class="flex">
                     <img src={profile}/>
                     <div class="ml-10">
@@ -131,8 +136,7 @@ export default class MyAccount extends React.Component {
                         <Item>
                             <div className="flex flex-col ml-5 p-4 max-w-xs">
                             <Link className="font-medium text-xl" 
-                                to={{ pathname: "/story/" + story.id,
-                                    state: {token: this.state.token, user: this.state.user}}}>
+                                to={{ pathname: "/story/" + story.id}}>
                             {story.story_title}
                             </Link>
                             <div className="flex ml-2">

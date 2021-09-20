@@ -5,6 +5,7 @@ import { ThumbUpIcon, ChartBarIcon} from '@heroicons/react/outline';
 import Item from '../common/item';
 import OrderList from '../common/order-list';
 import DateRadio from '../common/date-radio';
+import Cookies from "js-cookie";
 
 export default class StoryView extends React.Component {
     constructor(props) {
@@ -12,9 +13,9 @@ export default class StoryView extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            user: (this.props.location.state === undefined ? null : this.props.location.state.user),
+            user: Cookies.get('user'),
             stories: [],
-            token: (this.props.location.state === undefined ? null : this.props.location.state.token),
+            token: Cookies.get('token'),
             selectedOrder: "top",
             selectedTime: "7 Days",
         };

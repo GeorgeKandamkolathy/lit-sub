@@ -5,13 +5,14 @@ import OrderList from '../common/order-list';
 import DateRadio from '../common/date-radio';
 import { Link } from 'react-router-dom';
 import { ThumbUpIcon } from '@heroicons/react/outline';
+import Cookies from "js-cookie";
 
 export default class TagStory extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: (this.props.location.state === undefined ? null : this.props.location.state.user),
-            token: (this.props.location.state === undefined ? null : this.props.location.state.token),
+            user: Cookies.get('user'),
+            token: Cookies.get('token'),
             tag: this.props.match.params.tag_name,
             stories: [],
             selectedOrder: "all"

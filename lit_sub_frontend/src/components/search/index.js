@@ -4,6 +4,7 @@ import NavBar from "../common/nav-bar";
 import { Listbox, Transition, RadioGroup, Tab} from '@headlessui/react';
 import { ThumbUpIcon, ChevronDownIcon, ChevronUpIcon, SearchIcon } from '@heroicons/react/outline';
 import Item from '../common/item';
+import Cookies from "js-cookie"
 
 export default class Search extends React.Component {
     constructor(props) {
@@ -11,11 +12,11 @@ export default class Search extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            search: (this.props.location.state == undefined ? null : this.props.location.state.search),
-            user: (this.props.location.state == undefined ? null : this.props.location.state.user),
+            search: (this.props.location.state === undefined ? null : this.props.location.state.search),
+            user: Cookies.get("user"),
             storyResults: [],
             authorResults: [],
-            token: (this.props.location.state == undefined ? null : this.props.location.state.token),
+            token: Cookies.get("token"),
             selectedOrder: "top",
             selectedTime: "7 Days",
         };
@@ -67,10 +68,10 @@ export default class Search extends React.Component {
     }
     
     render(){
-        const {user, token, storyResults, authorResults, error, selectedTime, selectedOrder} = this.state
+        const {selectedTime, selectedOrder} = this.state
         return(
             <div>
-            <NavBar user={user} token={token} searchBar={false}/>
+            <NavBar searchBar={false}/>
             <div class="bg-blue-50 min-h-screen h-full pt-7">
             <div class="relative">
             <div className="flex justify-center">
@@ -210,8 +211,7 @@ export default class Search extends React.Component {
                         <Item>
                             <div class="flex flex-col ml-5 p-4 max-w-xs">
                             <Link class="font-medium text-xl" 
-                                to={{ pathname: "/story/" + story.id,
-                                    state: {token: this.state.token, user: this.state.user}}}>
+                                to={{ pathname: "/story/" + story.id}}>
                             {story.story_title}
                             </Link>
                             <div class="flex ml-2">
@@ -235,8 +235,7 @@ export default class Search extends React.Component {
                         <Item>
                             <div class="flex flex-col ml-5 p-4 max-w-xs">
                             <Link class="font-medium text-xl" 
-                                to={{ pathname: "/author/" + author.id,
-                                    state: {token: this.state.token, user: this.state.user}}}>
+                                to={{ pathname: "/author/" + author.id}}>
                             {author.username}
                             </Link>
                             </div>

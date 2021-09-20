@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import NavBar from "../common/nav-bar";
+import Cookies from "js-cookie";
 
 export default class TagView extends React.Component {
     constructor(props) {
@@ -8,9 +9,9 @@ export default class TagView extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            user: (this.props.location.state === undefined ? null : this.props.location.state.user),
+            user: Cookies.get('user'),
             tags: [],
-            token: (this.props.location.state === undefined ? null : this.props.location.state.token),
+            token: Cookies.get('token'),
             selectedOrder: "top",
         };
         this.url = "http://127.0.0.1:8000/" 
@@ -53,11 +54,10 @@ export default class TagView extends React.Component {
     }
     
     render(){
-        const {user, token} = this.state
         let sizes = ['text-lg', 'text-xl', 'text-2xl', 'text-3xl']
         return(
             <div>
-            <NavBar user={user} token={token}/>
+            <NavBar/>
             <div class="bg-blue-50 min-h-screen h-full pt-7">
             <h2 class="text-3xl mb-14 text-center">
                 All Tags
@@ -68,14 +68,12 @@ export default class TagView extends React.Component {
             {this.state.tags.map(tag => (
                 tag.story_count !== 0 ?(
                     <Link class={"font-medium p-2 " + sizes[this.fontSizer(tag.story_count)]}
-                        to={{ pathname: "/tag/" + tag.tag_name,
-                            state: {token: this.state.token, user: this.state.user}}}>
+                        to={{ pathname: "/tag/" + tag.tag_name}}>
                     {tag.tag_name}
                     </Link>
                 ):(
                     <div/>
                 )
-
             ))}
             </div>
             </div>
