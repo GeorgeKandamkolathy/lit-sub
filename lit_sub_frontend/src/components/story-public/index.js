@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import NavBar from "../common/nav-bar";
-import { AnnotationIcon, ThumbUpIcon as ThumbUpIconOutline } from '@heroicons/react/outline';
+import { AnnotationIcon, ThumbUpIcon as ThumbUpIconOutline, ChartBarIcon } from '@heroicons/react/outline';
 import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/solid';
 
 export default class StoryPublic extends React.Component {
@@ -12,12 +12,12 @@ export default class StoryPublic extends React.Component {
             user: this.props.user,
             isLoaded: false,
             story_id: this.props.story_id,
-            story: [],
+            story: this.props.story,
             comments: [],
             comment_text: "",
             token: this.props.token,
             fontSize: 2,
-            tags:[],
+            tags:this.props.tags,
         };
         this.url = "http://127.0.0.1:8000/" 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -106,26 +106,6 @@ export default class StoryPublic extends React.Component {
     }
 
     componentDidMount(){
-        fetch(this.url + "story/" + this.state.story_id + "/", {
-            method: 'GET',
-            mode: 'cors', 
-        })
-        .then(res => res.json())
-        .then(
-            (result) => {
-                this.setState({
-                    isLoaded: true,
-                    story: result,
-                    tags: result.tags
-                });
-            },
-            (error) => {
-                this.setState({
-                  isLoaded: true,
-                  error: error,
-                });
-            }
-        )
         fetch(this.url + "story/comments/"+this.state.story_id +"/0")
         .then(res => res.json())
         .then((result) => {
@@ -174,6 +154,7 @@ export default class StoryPublic extends React.Component {
                             <div className="flex justify-around pt-9 w-auto">
                             <p className="flex"><ThumbUpIconOutline className="h-5 w-5"/>{story.likes}</p>
                             <p className="flex"><AnnotationIcon className="h-5 w-5"/>{this.state.comments.length}</p>
+                            <p className="flex"><ChartBarIcon className="h-5 w-5"/>{this.state.story.view_count}</p>
                             </div>
                         </div>
                         </div>

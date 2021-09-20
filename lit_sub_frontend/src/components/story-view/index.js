@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import NavBar from "../common/nav-bar";
-import { Listbox, Transition, RadioGroup} from '@headlessui/react';
-import { ThumbUpIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline';
+import { ThumbUpIcon, ChartBarIcon} from '@heroicons/react/outline';
 import Item from '../common/item';
 import OrderList from '../common/order-list';
 import DateRadio from '../common/date-radio';
@@ -13,9 +12,9 @@ export default class StoryView extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            user: (this.props.location.state == undefined ? null : this.props.location.state.user),
+            user: (this.props.location.state === undefined ? null : this.props.location.state.user),
             stories: [],
-            token: (this.props.location.state == undefined ? null : this.props.location.state.token),
+            token: (this.props.location.state === undefined ? null : this.props.location.state.token),
             selectedOrder: "top",
             selectedTime: "7 Days",
         };
@@ -59,7 +58,7 @@ export default class StoryView extends React.Component {
     }
     
     render(){
-        const {user, token, stories, error, selectedTime, selectedOrder} = this.state
+        const {user, token} = this.state
         return(
             <div>
             <NavBar user={user} token={token}/>
@@ -91,6 +90,8 @@ export default class StoryView extends React.Component {
                     <Link class="font-bold ml-4 w-auto" to={"author/"+story.author}>{story.author_name}</Link>
                     <ThumbUpIcon class="w-4 h-4 mt-1 ml-4" />
                     <p class="ml-1">{story.likes}</p>
+                    <ChartBarIcon className="w-4 h-4 mt-1 ml-4"/>
+                    <p class="ml-1">{story.view_count}</p>
                     </div>
                     </div>
                     <p class="mt-10 italic">{story.synopsis}</p>

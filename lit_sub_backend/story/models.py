@@ -12,6 +12,7 @@ class Story(models.Model):
     tags = models.ManyToManyField(Tag, blank=True)
     author_name = CharField(max_length=100, default="Anonymous")
     likes = IntegerField(blank=True, default=0)
+    view_count = IntegerField(blank=True, default=0)
 
 class Comment(models.Model):
     story = models.ForeignKey(Story, on_delete=CASCADE, default=0)
