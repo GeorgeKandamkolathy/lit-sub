@@ -5,6 +5,7 @@ import Item from '../common/item';
 import OrderList from '../common/order-list';
 import DateRadio from '../common/date-radio';
 import Cookies from "js-cookie";
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export default class AuthorView extends React.Component {
     constructor(props) {
@@ -14,6 +15,7 @@ export default class AuthorView extends React.Component {
             isLoaded: false,
             user: Cookies.get('user'),
             authors: [],
+            authors_next: "",
             token: Cookies.get('token'),
             selectedOrder: "Top",
             selectedTime: "7 Days",
@@ -29,6 +31,7 @@ export default class AuthorView extends React.Component {
             this.setState({
                 isLoaded: true,
                 authors: result.results,
+                authors_next: result.next,
             }),
             (error) =>
             this.setState({
@@ -37,6 +40,24 @@ export default class AuthorView extends React.Component {
             })
         )
     }
+
+    
+    fetchMoreData = () => {
+        fetch(this.state.authors_next)
+        .then(res => res.json())
+        .then((result) =>
+            this.setState({
+                isLoaded: true,
+                authors: this.state.authors.concat(result.results),
+                authors_next: result.next,
+            }),
+            (error) =>
+            this.setState({
+                isLoaded: true,
+                error,
+            })
+        )
+      };
     
     render(){
         return(
@@ -55,10 +76,15 @@ export default class AuthorView extends React.Component {
             </div>
             </div>
             <div>
-            <ul>
+            <InfiniteScroll
+                dataLength={this.state.authors.length}
+                next={this.fetchMoreData}
+                hasMore={true}
+                loader={<h4>Loading...</h4>}
+            >
             {this.state.authors.map(author => (
                 <div class="flex justify-center">
-                <li key={author.id} class="group w-1/2 mb-2">
+                <div className="group w-1/2 mb-2">
                 <Item>
                     <div class="flex flex-col ml-5 p-4 max-w-xs">
                     <Link class="font-medium text-xl" 
@@ -69,10 +95,10 @@ export default class AuthorView extends React.Component {
                     </div>
                     </div>
                 </Item>
-                </li>  
+                </div>
                 </div>
             ))}
-            </ul>
+            </InfiniteScroll>
             </div>
             </div>
             </div>
