@@ -128,6 +128,18 @@ class StoryTests(APITestCase):
         self.assertEqual(response.data['comment_text'], "i like bug")
         self.assertEqual(response.data['author_name'], self.USER)
 
+    def test_post_group_comments(self):
+        self.test_post_comment()
+
+        url = reverse('story:detail', args=[1])
+        response = self.client.post(url, data={"comment_text": "bananan nana nana"}, format="json")
+
+        url = reverse('story:detail', args=[1])
+        response = self.client.post(url, data={"comment_text": "to be or not to be"}, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['comment_text'], "to be or not to be")
+        self.assertEqual(response.data['author_name'], self.USER)
     
     def test_post_comment_no_login(self):
         self.test_create_story()
@@ -141,7 +153,7 @@ class StoryTests(APITestCase):
     def test_get_comment(self):
         self.test_post_comment()
 
-        url = reverse('story:comment', args=[1, 0])
+        url = reverse('story:comment', args=[1, 0, "all"])
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -151,7 +163,7 @@ class StoryTests(APITestCase):
         self.test_post_comment()
         self.client.logout()
 
-        url = reverse('story:comment', args=[1, 1])
+        url = reverse('story:comment', args=[1, 1, "all"])
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -159,7 +171,7 @@ class StoryTests(APITestCase):
     def test_delete_comment(self):
         self.test_post_comment()
 
-        url = reverse('story:comment', args=[1, 1])
+        url = reverse('story:comment', args=[1, 1, "all"])
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -169,7 +181,7 @@ class StoryTests(APITestCase):
         self.test_post_comment()
         self.client.logout()
 
-        url = reverse('story:comment', args=[1, 1])
+        url = reverse('story:comment', args=[1, 1, "all"])
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -178,7 +190,7 @@ class StoryTests(APITestCase):
     def test_delete_comment_not_exist(self):
         self.create_user(self.USER)
 
-        url = reverse('story:comment', args=[1, 1])
+        url = reverse('story:comment', args=[1, 1, "all"])
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -368,7 +380,6 @@ class StoryTests(APITestCase):
     def test_get_all_story_order_top(self):
         self.create_group_story()
 
-        # like/<str:obj>/<int:obj_id>
         url = reverse('story:like', args=["story", 2])
         response = self.client.put(url)
         self.create_user("spooderman")
@@ -386,3 +397,24 @@ class StoryTests(APITestCase):
 
         self.assertEqual(response.data["results"][0]["id"], 2)
         self.assertEqual(response.data["results"][2]["id"], 1)
+
+    def test_get_all_story_order_time(self):
+        self.create_group_story()
+
+        url = reverse('story:story', args=["time"])
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["results"][0]["id"], 1)
+        self.assertEqual(response.data["results"][2]["id"], 3)
+    
+    def test_get_all_comment_order_time(self):
+        self.test_post_group_comments()
+
+        url = reverse('story:comment', args=[1, 0, "time"])
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['comment_text'], "i like bug")
+        self.assertEqual(response.data[2]['comment_text'], "to be or not to be")
+    

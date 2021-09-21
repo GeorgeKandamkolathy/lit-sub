@@ -25,8 +25,6 @@ class all_view(APIView):
     """
     [get] = full story list
     [post] = new story
-    [delete] = delete story
-    
     Implement different order return???
     """
     permission_classes=[TokenAuthentication]
@@ -36,10 +34,11 @@ class all_view(APIView):
         paginator = self.pagination_class()
 
         if order == "all":
-            stories = Story.objects.all()       
+            stories = Story.objects.all()
         elif order == "top":
-            
             stories = Story.objects.order_by('-likes')
+        elif order == "time":
+            stories = Story.objects.order_by('-datetime')
             
         result_page = paginator.paginate_queryset(stories, request)
         serializer = StorySerializer(result_page, many=True, context={'request':request})
@@ -56,11 +55,9 @@ class all_view(APIView):
     
 class story_view(APIView):
     """
-    my_account_view returns the data of the currently authenticated user
-    and allows changes to bio
-
-    [get] = return current authenticated user's data
-    [post] = post comment to current story
+    [get] = Get single story
+    [post] = Post comment to story
+    [delete] = delete story
     """
 
     permission_classes=[TokenAuthentication]
@@ -111,14 +108,19 @@ class comment_view(APIView):
 
     """
     
-    def get(self, request, story_id, comment_id):
+    def get(self, request, story_id, comment_id, order):
         story = get_object_or_404(Story, id=story_id)
 
-        comments = story.comment_set.all()       
+        if order == "all":
+            comments = story.comment_set.all()
+        elif order == "time":
+            comments = story.comment_set.order_by('-datetime')
+        # stories = Story.objects.order_by('-datetime')
+
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def delete(self, request, story_id, comment_id):
+    def delete(self, request, story_id, comment_id, order):
         comment = get_object_or_404(Comment, id=comment_id)
         if comment.author == request.user:
             comment.like_set.all().delete()
@@ -191,4 +193,4 @@ class group_return(APIView):
             result_page = paginator.paginate_queryset(comments, request)
             serializer = CommentSerializer(result_page, many=True, context={'request':request})
             
-            return paginator.get_paginated_response(serializer.data)    
+            return paginator.get_paginated_response(serializer.data)  

@@ -2,6 +2,7 @@ from django.db.models.deletion import CASCADE
 from django.db import models
 from django.db.models.fields import TextField, CharField, IntegerField
 from user.models import User
+from datetime import datetime
 
 class Story(models.Model):
     story_text = TextField()
@@ -10,6 +11,7 @@ class Story(models.Model):
     author = models.ForeignKey(User, on_delete=CASCADE, default=None)
     author_name = CharField(max_length=100, default="Anonymous")
     likes = IntegerField(blank=True, default=0)
+    datetime = models.DateTimeField(default=datetime.today(), blank=True)
 
 class Comment(models.Model):
     story = models.ForeignKey(Story, on_delete=CASCADE, default=0)
@@ -17,6 +19,7 @@ class Comment(models.Model):
     author_name = models.CharField(max_length=100, default="Anonymous")
     comment_text = CharField(max_length=400)
     likes = IntegerField(blank=True, default=0)
+    datetime = models.DateTimeField(default=datetime.today(), blank=True)
 
 class Like(models.Model):
     author = models.ForeignKey(User, on_delete=CASCADE, blank=True, null=True)
