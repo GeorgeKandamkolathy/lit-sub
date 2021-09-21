@@ -6,7 +6,7 @@ import Item from '../common/item';
 import OrderList from '../common/order-list';
 import DateRadio from '../common/date-radio';
 import Cookies from "js-cookie";
-import Scroller from '../common/scroller';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export default class StoryView extends React.Component {
     constructor(props) {
@@ -16,12 +16,10 @@ export default class StoryView extends React.Component {
             isLoaded: false,
             user: Cookies.get('user'),
             stories: [],
+            stories_next: "",
             token: Cookies.get('token'),
             selectedOrder: "top",
             selectedTime: "7 Days",
-            hasNextPage: true,
-            isNextPageLoading: false,
-            items: [],
         };
         this.url = "http://127.0.0.1:8000/" 
         this.componentDidMount = this.componentDidMount.bind(this)
@@ -37,6 +35,7 @@ export default class StoryView extends React.Component {
             this.setState({
                 isLoaded: true,
                 stories: result.results,
+                stories_next: result.next,
             }),
             (error) =>
             this.setState({
@@ -47,12 +46,13 @@ export default class StoryView extends React.Component {
     }
 
     componentDidMount(){
-        fetch(this.url + "story/sort/top/?limit=100&offset=0")
+        fetch(this.url + "story/sort/top/?limit=50&offset=0")
         .then(res => res.json())
         .then((result) =>
             this.setState({
                 isLoaded: true,
                 stories: result.results,
+                stories_next: result.next,
             }),
             (error) =>
             this.setState({
@@ -62,15 +62,48 @@ export default class StoryView extends React.Component {
         )
     }
 
-    _loadNextPage = (...args) => {
-        console.log("loadNextPage", ...args);
-        this.setState({ isNextPageLoading: true }, () => {
-          setTimeout(() => {
-            this.setState(state => ({
-              hasNextPage: state.items.length < 100,
-              isNextPageLoading: false,
-              items: [...state.items].concat(
-                this.state.stories.slice(state.items.length,state.items.length + 5).map(story => (
+    fetchMoreData = () => {
+        fetch(this.state.stories_next)
+        .then(res => res.json())
+        .then((result) =>
+            this.setState({
+                isLoaded: true,
+                stories: this.state.stories.concat(result.results),
+                stories_next: result.next,
+            }),
+            (error) =>
+            this.setState({
+                isLoaded: true,
+                error,
+            })
+        )
+      };
+      
+    render(){
+        const {user, token} = this.state
+        return(
+            <div>
+            <NavBar user={user} token={token}/>
+            <div class="bg-blue-50 min-h-screen h-full pt-7">
+            <div class="relative">
+            <h2 class="text-3xl mb-14 text-center">
+                All Stories
+            </h2>
+            <div class="absolute text-center left-27% top-12">
+                <OrderList onOrderChange={this.onOrderChange}/>
+            </div>
+            <div class="absolute top-14 right-1/4">
+                <DateRadio/>
+            </div>
+            </div>
+            <div>
+                <InfiniteScroll
+                dataLength={this.state.stories.length}
+                next={this.fetchMoreData}
+                hasMore={true}
+                loader={<h4>Loading...</h4>}
+                >
+                {this.state.stories.map(story => (
                     <div class="flex justify-center">
                     <div class="group w-1/2 mb-2">
                     <Item>
@@ -92,38 +125,8 @@ export default class StoryView extends React.Component {
                     </Item>
                     </div>  
                     </div>
-                ))
-              )
-            }));
-          }, 2500);
-        });
-      };
-      
-    render(){
-        const {user, token} = this.state
-        return(
-            <div>
-            <NavBar user={user} token={token}/>
-            <div class="bg-blue-50 min-h-screen h-full pt-7">
-            <div class="relative">
-            <h2 class="text-3xl mb-14 text-center">
-                All Stories
-            </h2>
-            <div class="absolute text-center left-27% top-12">
-                <OrderList onOrderChange={this.onOrderChange}/>
-            </div>
-            <div class="absolute top-14 right-1/4">
-                <DateRadio/>
-            </div>
-            </div>
-            <div>
-                <Scroller 
-                hasNextPage={this.state.hasNextPage}
-                isNextPageLoading={this.state.isNextPageLoading}
-                items={this.state.items}
-                loadNextPage={this._loadNextPage}
-                />
-
+                ))}                    
+                </InfiniteScroll>
             </div>
             </div>
             </div>
